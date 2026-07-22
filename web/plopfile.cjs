@@ -21,6 +21,11 @@ module.exports = function (plop) {
       },
       {
         type: 'add',
+        path: 'src/components/{{kebabCase name}}/test/{{pascalCase name}}.test.jsx',
+        templateFile: 'templates/Component.test.jsx.hbs',
+      },
+      {
+        type: 'add',
         path: 'src/components/{{kebabCase name}}/index.js',
         templateFile: 'templates/Index.js.hbs',
       }

@@ -1,0 +1,15 @@
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {{pascalCase name}} from '../src/{{pascalCase name}}';
+
+describe('{{pascalCase name}}', () => {
+  it('should render component', () => {
+    const { container } = render(<{{pascalCase name}} />);
+    expect(container.querySelector('.{{kebabCase name}}-container')).toBeInTheDocument();
+  });
+
+  it('should match snapshot', () => {
+    const { container } = render(<{{pascalCase name}} />);
+    expect(container).toMatchSnapshot();
+  });
+});
