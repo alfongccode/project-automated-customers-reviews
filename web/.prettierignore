@@ -1,0 +1,10 @@
+node_modules/
+dist/
+public/
+templates/
+index.html
+plopfile.cjs
+package-lock.json
+eslint.config.js
+vite.config.js
+README.md
