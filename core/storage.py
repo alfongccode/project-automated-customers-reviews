@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from storage.models import User, Product, Review
-from models.categorizer.main import get_product_classification
+from models.categorize.main import get_product_classification
+from models.summarize.main import summarize_reviews
 
 async def create_new_user(username, email, password):
     User = get_user_model()
@@ -72,3 +73,11 @@ async def get_user_reviews_list(user_id):
 
 async def get_products_reviews_list(product_id):
     return [review async for review in Review.objects.filter(product=product_id).values()]
+
+async def get_product(product_id):
+    return Product.objects.filter(id=product_id)
+
+async def summarize_product_reviews(product_id):
+    product = await Product.objects.filter(id=product_id).values('name', 'category', 'description', 'tags').afirst()
+    reviews = [review async for review in Review.objects.filter(product=product_id).values('title', 'content', 'rating', 'sentiment')]
+    return summarize_reviews(product, reviews)

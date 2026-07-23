@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from storage.models import Product, Review
 from models.sentiment.main import sentiment_analysis
-from models.categorizer.main import get_product_classification
+from models.categorize.main import get_product_classification
 
 User = get_user_model()
 
