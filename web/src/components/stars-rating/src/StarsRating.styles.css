@@ -1,19 +1,19 @@
 @import '../../../index.css';
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :root {
-    --color-grey: #d1d5db;
-    --color-blue: #2563eb;
+  --color-grey: #d1d5db;
+  --color-blue: #2563eb;
 }
- 
+
 .star-rating-container {
   display: inline-flex;
   gap: 4px;
 }
- 
+
 .star-button {
   background: none;
   border: none;
@@ -24,7 +24,7 @@
   color: var(--color-grey);
   transition: color 0.15s ease;
 }
- 
+
 .star-button--filled {
   color: var(--color-blue);
 }

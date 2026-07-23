@@ -3,11 +3,15 @@ import './StarsRating.styles.css';
 import { useState } from 'react';
 
 function StarsRating({ value, onChange }) {
-  const STARS_VALUES = [1, 2, 3, 4, 5]
+  const STARS_VALUES = [1, 2, 3, 4, 5];
   const [hovered, setHovered] = useState(0);
 
   return (
-    <div className="star-rating-container" role="radiogroup" aria-label="Rating">
+    <div
+      className="star-rating-container"
+      role="radiogroup"
+      aria-label="Rating"
+    >
       {STARS_VALUES.map((star) => {
         const filled = star <= (hovered || value);
         return (
@@ -28,6 +32,6 @@ function StarsRating({ value, onChange }) {
       })}
     </div>
   );
-};
+}
 
-export default StarsRating
+export default StarsRating;

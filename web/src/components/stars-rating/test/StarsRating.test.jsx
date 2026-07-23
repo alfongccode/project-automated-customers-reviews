@@ -5,7 +5,9 @@ import StarsRating from '../src/StarsRating';
 describe('StarsRating', () => {
   it('should render component', () => {
     const { container } = render(<StarsRating />);
-    expect(container.querySelector('.stars-rating-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.stars-rating-container')
+    ).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {

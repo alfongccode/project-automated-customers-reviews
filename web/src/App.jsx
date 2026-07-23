@@ -4,16 +4,11 @@ import viteLogo from './assets/vite.svg';
 import heroImg from './assets/hero.png';
 import './App.css';
 import ReviewForm from './components/review-form';
+import { create_new_review, get_review_sentiment } from './providers';
 
 function App() {
   const [count, setCount] = useState(0);
   const [apiResponse, setApiResponse] = useState('');
-
-  function test_fastapi() {
-    return fetch('/api/review/classify')
-      .then((response) => response.json())
-      .then((data) => setApiResponse(JSON.stringify(data)));
-  }
 
   function create_test_user_fastapi() {
     return fetch('/api/user/create', {
@@ -27,16 +22,14 @@ function App() {
     }).then((response) => response.json());
   }
 
+  function handleSentimentAnalysis(review_id) {
+    return get_review_sentiment(30).then((response) =>
+      setApiResponse(response)
+    );
+  }
+
   function handleCreateNewReview(data) {
-    return fetch('/api/review/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: data.title,
-        content: data.content,
-        rating: data.rating
-      })
-    })
+    return create_new_review(data).then((response) => console.log('created'));
   }
 
   return (
@@ -54,7 +47,11 @@ function App() {
           </p>
         </div>
         <ReviewForm onSubmit={handleCreateNewReview} />
-        <button type="button" className="counter" onClick={test_fastapi}>
+        <button
+          type="button"
+          className="counter"
+          onClick={(ev) => get_review_sentiment(30)}
+        >
           Test FastAPI
         </button>
         <label>{apiResponse}</label>

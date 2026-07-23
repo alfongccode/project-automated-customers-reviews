@@ -1,6 +1,6 @@
 import React from 'react';
 import './ReviewForm.styles.css';
-import StarsRating from '../../stars-rating'
+import StarsRating from '../../stars-rating';
 import { useState } from 'react';
 
 function ReviewForm({ onSubmit }) {
@@ -12,9 +12,9 @@ function ReviewForm({ onSubmit }) {
     const formData = new FormData(form);
 
     onSubmit({
-      'title': formData.get('title'),
-      'content': formData.get('content'),
-      'rating': rating
+      title: formData.get('title'),
+      content: formData.get('content'),
+      rating: rating,
     });
   }
 
