@@ -1,3 +1,3 @@
-import ReviewForm from "./src/ReviewForm";
+import ReviewForm from './src/ReviewForm';
 
-export default ReviewForm
+export default ReviewForm;

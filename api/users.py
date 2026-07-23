@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from core import test_user
 
-router = APIRouter(prefix='/users', tags=["users"])
+router = APIRouter(prefix='/user', tags=["user"])
 
 class CreateUserRequest(BaseModel):
     username: str

@@ -5,7 +5,9 @@ import ReviewForm from '../src/ReviewForm';
 describe('ReviewForm', () => {
   it('should render component', () => {
     const { container } = render(<ReviewForm />);
-    expect(container.querySelector('.review-form-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.review-form-container')
+    ).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {

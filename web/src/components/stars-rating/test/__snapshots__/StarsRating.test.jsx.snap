@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StarsRating should match snapshot 1`] = `
+<div>
+  <div
+    aria-label="Rating"
+    class="star-rating-container"
+    role="radiogroup"
+    style="display: inline-flex; gap: 4px;"
+  >
+    <button
+      aria-checked="false"
+      aria-label="1 estrella"
+      class="star-button"
+      role="radio"
+      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
+      type="button"
+    >
+      ☆
+    </button>
+    <button
+      aria-checked="false"
+      aria-label="2 estrellas"
+      class="star-button"
+      role="radio"
+      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
+      type="button"
+    >
+      ☆
+    </button>
+    <button
+      aria-checked="false"
+      aria-label="3 estrellas"
+      class="star-button"
+      role="radio"
+      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
+      type="button"
+    >
+      ☆
+    </button>
+    <button
+      aria-checked="false"
+      aria-label="4 estrellas"
+      class="star-button"
+      role="radio"
+      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
+      type="button"
+    >
+      ☆
+    </button>
+    <button
+      aria-checked="false"
+      aria-label="5 estrellas"
+      class="star-button"
+      role="radio"
+      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
+      type="button"
+    >
+      ☆
+    </button>
+  </div>
+</div>
+`;

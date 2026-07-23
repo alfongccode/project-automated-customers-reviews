@@ -1,5 +1,30 @@
 @import '../../../index.css';
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px;
+}
+
+.register-form .title {
+  margin: 8px 0;
+}
+
+.register-form .content {
+  margin: 8px 0;
+}
+
+.register-form .rating{
+  margin: 8px 0;
+}
+
+.register-form .buttons-toolbar {
+  display: flex;
+  padding: 8px;
+  gap: 10px;
 }

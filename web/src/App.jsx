@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from './assets/vite.svg';
 import heroImg from './assets/hero.png';
 import './App.css';
+import ReviewForm from './components/review-form';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,16 +16,27 @@ function App() {
   }
 
   function create_test_user_fastapi() {
-    return fetch('/api/users/create', {
+    return fetch('/api/user/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        'username': 'test',
-        'email': 'test@example.com',
-        'password': 'test?1234'
+        username: 'test',
+        email: 'test@example.com',
+        password: 'test?1234',
       }),
+    }).then((response) => response.json());
+  }
+
+  function handleCreateNewReview(data) {
+    return fetch('/api/review/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: data.title,
+        content: data.content,
+        rating: data.rating
+      })
     })
-      .then((response) => response.json());
   }
 
   return (
@@ -41,9 +53,7 @@ function App() {
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
         </div>
-        <button type="button" className="counter" onClick={create_test_user_fastapi}>
-          Create test user on DB
-        </button>
+        <ReviewForm onSubmit={handleCreateNewReview} />
         <button type="button" className="counter" onClick={test_fastapi}>
           Test FastAPI
         </button>
