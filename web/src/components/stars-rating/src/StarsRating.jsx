@@ -8,7 +8,7 @@ function StarsRating({ value, onChange }) {
 
   return (
     <div
-      className="star-rating-container"
+      className="stars-rating-container"
       role="radiogroup"
       aria-label="Rating"
     >

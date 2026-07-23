@@ -4,6 +4,92 @@ exports[`ReviewForm should match snapshot 1`] = `
 <div>
   <div
     class="review-form-container"
-  />
+  >
+    <form
+      class="register-form"
+    >
+      <input
+        class="title"
+        id="title"
+        name="title"
+        placeholder="Write your review title here"
+        type="text"
+      />
+      <textarea
+        class="content"
+        id="content"
+        name="content"
+        placeholder="Write your review here"
+        rows="4"
+      />
+      <div
+        aria-label="Rating"
+        class="stars-rating-container"
+        role="radiogroup"
+      >
+        <button
+          aria-checked="false"
+          aria-label="1 star"
+          class="star-button"
+          role="radio"
+          type="button"
+        >
+          ☆
+        </button>
+        <button
+          aria-checked="false"
+          aria-label="2 stars"
+          class="star-button"
+          role="radio"
+          type="button"
+        >
+          ☆
+        </button>
+        <button
+          aria-checked="false"
+          aria-label="3 stars"
+          class="star-button"
+          role="radio"
+          type="button"
+        >
+          ☆
+        </button>
+        <button
+          aria-checked="false"
+          aria-label="4 stars"
+          class="star-button"
+          role="radio"
+          type="button"
+        >
+          ☆
+        </button>
+        <button
+          aria-checked="false"
+          aria-label="5 stars"
+          class="star-button"
+          role="radio"
+          type="button"
+        >
+          ☆
+        </button>
+      </div>
+      <div
+        class="buttons-toolbar"
+      >
+        <button
+          class="btn-clear"
+          type="reset"
+        >
+          Clear
+        </button>
+        <button
+          class="btn-send"
+          type="submit"
+        >
+          Send
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 `;

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ProductsList should match snapshot 1`] = `
+<div>
+  <div
+    class="products-list-container"
+  >
+    <p
+      class="products-list-status"
+    >
+      There are no products to display.
+    </p>
+  </div>
+</div>
+`;

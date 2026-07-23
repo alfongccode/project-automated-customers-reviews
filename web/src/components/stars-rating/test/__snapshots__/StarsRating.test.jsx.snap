@@ -4,56 +4,50 @@ exports[`StarsRating should match snapshot 1`] = `
 <div>
   <div
     aria-label="Rating"
-    class="star-rating-container"
+    class="stars-rating-container"
     role="radiogroup"
-    style="display: inline-flex; gap: 4px;"
   >
     <button
       aria-checked="false"
-      aria-label="1 estrella"
+      aria-label="1 star"
       class="star-button"
       role="radio"
-      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
       type="button"
     >
       ☆
     </button>
     <button
       aria-checked="false"
-      aria-label="2 estrellas"
+      aria-label="2 stars"
       class="star-button"
       role="radio"
-      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
       type="button"
     >
       ☆
     </button>
     <button
       aria-checked="false"
-      aria-label="3 estrellas"
+      aria-label="3 stars"
       class="star-button"
       role="radio"
-      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
       type="button"
     >
       ☆
     </button>
     <button
       aria-checked="false"
-      aria-label="4 estrellas"
+      aria-label="4 stars"
       class="star-button"
       role="radio"
-      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
       type="button"
     >
       ☆
     </button>
     <button
       aria-checked="false"
-      aria-label="5 estrellas"
+      aria-label="5 stars"
       class="star-button"
       role="radio"
-      style="background: none; cursor: pointer; padding: 0px; font-size: 1.75rem; line-height: 1; color: rgb(209, 213, 219); transition: color 0.15s ease;"
       type="button"
     >
       ☆

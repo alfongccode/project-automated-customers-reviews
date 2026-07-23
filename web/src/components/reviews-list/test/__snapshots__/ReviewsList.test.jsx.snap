@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReviewsList should match snapshot 1`] = `
+<div>
+  <div
+    class="reviews-list-container"
+  >
+    <p
+      class="reviews-list-status"
+    >
+      This product does not yet have any reviews.
+    </p>
+  </div>
+</div>
+`;

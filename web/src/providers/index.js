@@ -1,3 +1,2 @@
-import { create_new_review, get_review_sentiment } from './src/reviews.js';
-
-export { create_new_review, get_review_sentiment };
+export * from './src/products.js';
+export * from './src/reviews.js';

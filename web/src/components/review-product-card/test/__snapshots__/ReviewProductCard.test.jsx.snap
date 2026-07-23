@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReviewProductCard should match snapshot 1`] = `
+<div>
+  <div
+    class="review-product-card-container"
+  >
+    <p
+      class="review-product-card-message"
+    >
+      Have you tried this product yet? Tell us what you think.
+    </p>
+    <button
+      class="review-product-card-add-button"
+      type="button"
+    >
+      Add new review
+    </button>
+  </div>
+</div>
+`;

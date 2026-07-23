@@ -9,7 +9,7 @@
   --color-blue: #2563eb;
 }
 
-.star-rating-container {
+.stars-rating-container {
   display: inline-flex;
   gap: 4px;
 }
