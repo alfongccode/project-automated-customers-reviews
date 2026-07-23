@@ -7,12 +7,12 @@ router = APIRouter(prefix='/products', tags=["products"])
 class CreateProductRequest(BaseModel):
     name: str
     sku: str
-    category: str
+    tags: str
     description: str
 
 @router.post('')
-async def api_create_new_review(payload: CreateProductRequest):
-    return create_new_product(name=payload.name, sku=payload.sku, category=payload.category, description=payload.description)
+async def api_create_new_product(payload: CreateProductRequest):
+    return await create_new_product(name=payload.name, sku=payload.sku, tags=payload.tags, description=payload.description)
 
 @router.get('')
 async def api_get_products_list():

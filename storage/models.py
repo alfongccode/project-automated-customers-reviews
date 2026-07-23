@@ -16,7 +16,8 @@ class User(AbstractUser):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     sku = models.CharField(max_length=100)
-    category = models.TextField()
+    tags = models.TextField()
+    category = models.CharField(max_length=100)
     description = models.TextField(default="")
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from storage.models import User, Product, Review
+from models.categorizer.main import get_product_classification
 
-def create_new_user(username, email, password):
+async def create_new_user(username, email, password):
     User = get_user_model()
     user, created = User.objects.get_or_create(
         username=username,
@@ -9,22 +10,37 @@ def create_new_user(username, email, password):
     )
     if created:
         user.set_password(password)
-        user.save()
+        await user.asave()
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
 
-def create_new_product(name, sku, category, description):
+async def create_new_product(name, sku, tags, description):
+    category = get_product_classification({ 'name': name, 'tags': tags })
     product = Product(
         name=name,
         sku=sku,
+        tags=tags,
         category=category,
         description=description
     )
-    product.save()
+    await product.asave()
+    return {
+        "id": product.id,
+        "name": product.name,
+        "sku": product.sku,
+        "tags": product.tags,
+        "category": product.category,
+        "description": product.description,
+        "added_at": product.added_at,
+        "updated_at": product.updated_at,
+    }
 
 async def create_new_review(title, content, rating):
     users = await User.objects.all()
     products = await Product.objects.all();
-    print(users)
-    print(products)
     review = Review(
         user=users[0],
         product=products[0],
@@ -33,7 +49,14 @@ async def create_new_review(title, content, rating):
         rating=rating
     )
     await review.asave()
-    return review
+    return {
+        "id": review.id,
+        "user": review.user,
+        "product": review.product,
+        "title": review.title,
+        "content": review.content,
+        "rating": review.rating
+    }
 
 async def get_users_list():
     return [user async for user in User.objects.all().values()]

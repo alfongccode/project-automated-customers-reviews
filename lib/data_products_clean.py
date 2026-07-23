@@ -40,6 +40,6 @@ def clean_data_frame(df):
     df_2 = data_frame_preprocessing(df_2, ['name', 'categories', 'primaryCategories', 'reviews.title', 'reviews.text'])
 
     # Join all categories to improve the categories signal
-    df_2['all_categories'] = clean_categories_columns(df_2['categories']) + " " + clean_categories_columns(df_2['primaryCategories'])
+    df_2['tags'] = clean_categories_columns(df_2['categories']) + " " + clean_categories_columns(df_2['primaryCategories'])
     
     return df_2

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from storage.models import Product, Review
+from models.categorizer.main import get_product_classification
 
 User = get_user_model()
 
@@ -46,11 +47,13 @@ class Command(BaseCommand):
         data = self.load_data(os.path.join(settings.BASE_DIR, "storage", "seed_data", "products.csv"))
         for i, row in enumerate(data):
             self.stdout.write('Creating product...')
+            category = get_product_classification({ 'name': row['name'], 'tags': row['categories'] })
             product, _ = Product.objects.get_or_create(
                 sku=row['asins'],
                 defaults={
                     'name': row['name'],
-                    'category': row['categories'],
+                    'tags': row['categories'],
+                    'category': category,
                     'description': f"Product description {i}",
                 }
             )
