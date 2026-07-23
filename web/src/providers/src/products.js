@@ -8,6 +8,12 @@ function get_products_reviews_list(product_id) {
   );
 }
 
+function get_products_reviews_summary(product_id) {
+  return fetch(`/api/products/${product_id}/reviews/summarize`).then(
+    (response) => response.json()
+  );
+}
+
 function create_new_product(data) {
   return fetch('/api/products', {
     method: 'POST',
@@ -22,4 +28,9 @@ function create_new_product(data) {
   });
 }
 
-export { create_new_product, get_products_list, get_products_reviews_list };
+export {
+  create_new_product,
+  get_products_list,
+  get_products_reviews_list,
+  get_products_reviews_summary,
+};

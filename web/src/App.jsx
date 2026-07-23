@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import ProductsList from './components/products-list';
+import ReviewsSummaryCard from './components/reviews-summary-card';
 import ReviewsList from './components/reviews-list';
 import ReviewProductCard from './components/review-product-card';
 import {
   create_new_review,
   get_products_list,
   get_products_reviews_list,
+  get_products_reviews_summary,
   get_review_sentiment,
 } from './providers';
 
@@ -14,7 +16,9 @@ function App() {
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState({});
   const [reviews, setReviews] = useState([]);
-  const [apiResponse, setApiResponse] = useState('');
+  const [reviewsSummary, setReviewsSummary] = useState(null);
+  const [isSummaryLoading, setIsSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState(null);
 
   function create_test_user_fastapi() {
     return fetch('/api/user/create', {
@@ -32,15 +36,16 @@ function App() {
     return get_products_list().then((products) => setProducts([...products]));
   }
 
-  function handleSentimentAnalysis(review_id) {
-    return get_review_sentiment(30).then((response) =>
-      setApiResponse(response)
-    );
-  }
-
-  function handleShowProductReviews(product_id) {
+  async function handleShowProductReviews(product_id) {
     const product = products.find((product) => product.id === product_id);
     setProduct(product);
+    setIsSummaryLoading(true);
+    setSummaryError(null);
+    await get_products_reviews_summary(product_id)
+      .then((summary) => setReviewsSummary(summary))
+      .catch(() => setSummaryError('Could not summarize the reviews.'))
+      .finally(() => setIsSummaryLoading(false));
+
     return get_products_reviews_list(product_id).then((reviews) =>
       setReviews([...reviews])
     );
@@ -57,6 +62,11 @@ function App() {
       <ProductsList
         products={products}
         onViewReviews={handleShowProductReviews}
+      />
+      <ReviewsSummaryCard
+        summary={reviewsSummary}
+        isLoading={isSummaryLoading}
+        error={summaryError}
       />
       <ReviewsList reviews={reviews} />
       <ReviewProductCard product={product} onSubmit={handleCreateNewReview} />

@@ -1,0 +1,155 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-grey: #d1d5db;
+  --color-grey-dark: #6b7280;
+  --color-text: #111827;
+  --color-green: #059669;
+  --color-green-bg: rgba(5, 150, 105, 0.1);
+  --color-red: #dc2626;
+  --color-red-bg: rgba(220, 38, 38, 0.1);
+  --color-neutral: #6b7280;
+  --color-neutral-bg: rgba(107, 114, 128, 0.1);
+}
+
+.reviews-summary-card-container {
+  border: 1px solid var(--color-grey);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  background: #fff;
+  text-align: left;
+}
+
+.reviews-summary-card-status {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-grey-dark);
+}
+
+.reviews-summary-card-status--error {
+  color: var(--color-red);
+}
+
+.reviews-summary-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reviews-summary-card-title {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.reviews-summary-card-total {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-grey-dark);
+}
+
+.reviews-summary-card-text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.reviews-summary-card-sentiments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reviews-summary-card-pill {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.reviews-summary-card-pill--positive {
+  color: var(--color-green);
+  background: var(--color-green-bg);
+}
+
+.reviews-summary-card-pill--negative {
+  color: var(--color-red);
+  background: var(--color-red-bg);
+}
+
+.reviews-summary-card-pill--neutral {
+  color: var(--color-neutral);
+  background: var(--color-neutral-bg);
+}
+
+.reviews-summary-card-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .reviews-summary-card-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reviews-summary-card-column-title {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-grey-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.reviews-summary-card-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reviews-summary-card-list-item {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  padding-left: 14px;
+  position: relative;
+  color: var(--color-text);
+}
+
+.reviews-summary-card-list-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.reviews-summary-card-list-item--positive::before {
+  background: var(--color-green);
+}
+
+.reviews-summary-card-list-item--negative::before {
+  background: var(--color-red);
+}
+
+.reviews-summary-card-empty {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-grey-dark);
+  font-style: italic;
+}
