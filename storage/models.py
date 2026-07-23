@@ -29,6 +29,11 @@ class Product(models.Model):
         return f'{self.name} - {self.sku}'
 
 class Review(models.Model):
+    class SENTIMENT(models.TextChoices):
+        NEGATIVE = 'negative'
+        NEUTRAL = 'neutral'
+        POSITIVE = 'positive'
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -44,6 +49,7 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField(
         choices=[(i, str(i)) for i in range(1, 6)]
     )
+    sentiment = models.CharField(max_length=10, choices=SENTIMENT.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -7,22 +7,22 @@ LORA_MODEL = "Bitnick42/roberta-base-review-sentiment-analysis"
 LABEL2ID = {"negative": 0, "neutral": 1, "positive": 2}
 ID2LABEL = {v: k for k, v in LABEL2ID.items()}
 
+tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
+model = AutoModelForSequenceClassification.from_pretrained(BASE_MODEL)
+model = PeftModel.from_pretrained(
+    model,
+    LORA_MODEL
+)
+
+model.eval()
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model.to(device)
+
 def sentiment_analysis(review):
     review_title = review['title']
     review_content = review['content']
     review_input = ' '.join([review_title, review_content])
-
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
-    model = AutoModelForSequenceClassification.from_pretrained(BASE_MODEL)
-    model = PeftModel.from_pretrained(
-        model,
-        LORA_MODEL
-    )
-
-    model.eval()
-    
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device)
 
     enc = tokenizer(review_input, truncation=True, max_length=128, padding=True, return_tensors="pt").to(device)
 

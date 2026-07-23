@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from storage.models import Product, Review
+from models.sentiment.main import sentiment_analysis
 from models.categorizer.main import get_product_classification
 
 User = get_user_model()
@@ -60,12 +61,14 @@ class Command(BaseCommand):
             products.append(product)
 
             self.stdout.write('Creating product review...')
+            analysis_data = sentiment_analysis({ 'title': row['reviews.title'], 'content': row['reviews.text'] })
             Review.objects.create(
                 user=random.choice(users),
                 product=product,
                 title=row['reviews.title'],
                 content=row['reviews.text'],
                 rating=row['reviews.rating'],
+                sentiment=analysis_data['sentiment']
             )
 
         self.stdout.write(self.style.SUCCESS(
