@@ -98,8 +98,9 @@ DATABASES = {
     }
 }
 
-if os.environ.get("VERCEL"):
-    DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
+sslmode = os.getenv("DB_SSLMODE")
+if sslmode:
+    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = sslmode
 
 
 # Password validation
