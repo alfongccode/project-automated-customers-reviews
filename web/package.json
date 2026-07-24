@@ -41,5 +41,8 @@
     "plop": "^4.0.5",
     "prettier": "^3.9.6",
     "vite": "^8.1.1"
+  },
+  "overrides": {
+    "@babel/core": "^7.29.7"
   }
 }

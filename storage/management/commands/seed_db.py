@@ -11,6 +11,12 @@ from models.categorize.main import get_product_classification
 
 User = get_user_model()
 
+def secure_rating(value):
+    try:
+        return int(float(value))
+    except (ValueError, TypeError):
+        return 0
+
 class Command(BaseCommand):
     help = "Populate the database with test data (seed)"
     
@@ -68,7 +74,7 @@ class Command(BaseCommand):
                 product=product,
                 title=row['reviews.title'],
                 content=row['reviews.text'],
-                rating=row['reviews.rating'],
+                rating=secure_rating(row['reviews.rating']),
                 sentiment=analysis_data['sentiment']
             )
 
