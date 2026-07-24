@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from storage.models import User, Product, Review
-from models.categorize.main import get_product_classification
 from models.summarize.main import summarize_reviews
 from models.sentiment.main import sentiment_analysis
 
@@ -20,6 +19,7 @@ async def create_new_user(username, email, password):
         }
 
 async def create_new_product(brand, name, sku, tags, description):
+    from models.categorize.main import get_product_classification
     category = get_product_classification({ 'name': name, 'tags': tags })
     product = Product(
         brand=brand,
