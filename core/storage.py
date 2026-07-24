@@ -1,4 +1,6 @@
+
 from django.contrib.auth import get_user_model
+from fastapi import HTTPException
 from storage.models import User, Product, Review
 from models.summarize.main import summarize_reviews
 from models.sentiment.main import sentiment_analysis
@@ -68,13 +70,22 @@ async def get_users_list():
     return [user async for user in User.objects.all().values()]
 
 async def get_user(user_id):
-    return await User.objects.filter(id=user_id).values('username', 'email', 'created_at').afirst()
+    try:
+        return await User.objects.filter(id=user_id).values('username', 'email', 'created_at', 'updated_at').afirst()
+    except Product.DoesNotExist:
+        raise HTTPException(status_code=404, detail="User not found")
 
 async def get_products_list():
     return [product async for product in Product.objects.all().values()]
 
 async def get_reviews_list():
     return [review async for review in Review.objects.all().values()]
+
+async def get_review(review_id):
+    try:
+        return Review.objects.filter(id=review_id).values('username', 'product_id', 'title', 'content', 'rating', 'sentiment', 'created_at', 'updated_at').afirst()
+    except Product.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Review not found")
 
 async def get_user_reviews_list(user_id):
     return [review async for review in Review.objects.filter(user=user_id).values()]
@@ -83,7 +94,10 @@ async def get_products_reviews_list(product_id):
     return [review async for review in Review.objects.filter(product=product_id).values()]
 
 async def get_product(product_id):
-    return Product.objects.filter(id=product_id)
+    try:
+        return Product.objects.filter(id=product_id).values('brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at').afirst()
+    except Product.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Product not found")
 
 async def summarize_product_reviews(product_id):
     product = await Product.objects.filter(id=product_id).values('name', 'category', 'description', 'tags').afirst()
