@@ -4,7 +4,7 @@ from scipy.sparse import hstack
 from django.conf import settings
 from lib.data_preprocessing import clean_sentence_preprocessing
 
-ARTIFACT_PATH = os.path.join(settings.BASE_DIR, 'models', 'product_category_classifier.joblib')
+ARTIFACT_PATH = settings.BASE_DIR / 'models' / 'product_category_classifier.joblib'
 artifact = joblib.load(ARTIFACT_PATH)
 
 def get_product_classification(product):

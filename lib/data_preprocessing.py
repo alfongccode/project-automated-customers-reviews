@@ -5,10 +5,9 @@ import pandas as pd
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from functools import reduce
+from django.conf import settings
 
-nltk.download("punkt")
-nltk.download("punkt_tab")
-nltk.download("stopwords")
+nltk.data.path.insert(0, str(settings.BASE_DIR / "nltk_data"))
 
 stopwords_en = set(stopwords.words("english"))
 
