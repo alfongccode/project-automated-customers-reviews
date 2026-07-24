@@ -74,7 +74,7 @@ class Command(BaseCommand):
                 product=product,
                 title=row['reviews.title'],
                 content=row['reviews.text'],
-                rating=secure_rating(row['reviews.rating']),
+                rating=int(float(row['reviews.rating'])),
                 sentiment=analysis_data['sentiment']
             )
 

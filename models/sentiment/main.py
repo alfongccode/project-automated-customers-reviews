@@ -48,23 +48,41 @@ _ = load_dotenv(find_dotenv(), override=True)
 HF_TOKEN = os.environ["HF_TOKEN"]
 HF_URL = "https://router.huggingface.co/hf-inference/models/cardiffnlp/twitter-roberta-base-sentiment-latest"
 
-async def sentiment_analysis(review):
-    review_input = " ".join([review["title"], review["content"]])
+import os
+import httpx
+from dotenv import load_dotenv, find_dotenv
 
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        resp = await client.post(
+load_dotenv(find_dotenv(), override=True)
+
+HF_TOKEN = os.environ["HF_TOKEN"]
+HF_URL = "https://router.huggingface.co/hf-inference/models/cardiffnlp/twitter-roberta-base-sentiment-latest"
+
+def sentiment_analysis(review):
+    review_input = " ".join([
+        (review.get("title") or "").strip(),
+        (review.get("content") or "").strip(),
+    ]).strip()
+
+    if not review_input:
+        return {"review": review, "sentiment": "neutral", "confidence": 0.0}
+
+    with httpx.Client(timeout=60.0) as client:
+        resp = client.post(
             HF_URL,
             headers={"Authorization": f"Bearer {HF_TOKEN}"},
-            json={"inputs": review_input, "options": {"wait_for_model": True}},
+            json={"inputs": review_input[:1000],
+                  "options": {"wait_for_model": True}},
         )
 
-    resp.raise_for_status()
+    if resp.status_code != 200:
+        return {"review": review, "sentiment": "neutral", "confidence": 0.0}
 
-    preds = resp.json()[0]
+    data = resp.json()
+    preds = data[0] if isinstance(data[0], list) else data
     best = max(preds, key=lambda p: p["score"])
 
     return {
         "review": review,
-        "sentiment": best["label"],
+        "sentiment": best["label"].lower(),
         "confidence": round(best["score"], 4),
     }
