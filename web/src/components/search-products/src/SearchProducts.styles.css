@@ -1,0 +1,47 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+.search-box {
+  border: 3px solid var(--ink);
+  background: var(--white);
+  padding: 18px;
+  margin-bottom: 22px;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.search-label {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--slate);
+  margin-bottom: 12px;
+}
+
+.search-input {
+  border: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  font-size: 16px;
+  color: #8a8f9a;
+}
+.search-input .cash {
+  color: var(--red);
+  font-weight: 800;
+}
+.search-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--ink);
+  padding: 0;
+}
+.search-input input::placeholder {
+  color: #8a8f9a;
+}

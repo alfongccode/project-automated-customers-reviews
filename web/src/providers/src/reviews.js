@@ -5,12 +5,13 @@ function get_review_sentiment(review_id) {
 }
 
 function create_new_review(data) {
+  console.log(data);
   return fetch('/api/reviews', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      user: 1,
-      product: 1,
+      username: data.username,
+      product_id: data.product_id,
       title: data.title,
       content: data.content,
       rating: data.rating,

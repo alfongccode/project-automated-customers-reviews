@@ -1,0 +1,47 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+footer {
+  border-top: 4px solid var(--ink);
+  padding: 34px 40px 44px;
+}
+footer h3 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 26px;
+  color: var(--red);
+  text-shadow: 2px 2px 0 var(--ink);
+  margin: 0 0 14px;
+}
+footer p {
+  max-width: 640px;
+  color: #3a3d46;
+  line-height: 1.6;
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+.foot-tags {
+  display: flex;
+  gap: 12px;
+}
+.foot-tag {
+  border: 2px solid var(--ink);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+}
+.foot-tag.dark {
+  background: var(--ink);
+  color: var(--white);
+}
+.foot-tag.red {
+  background: var(--red);
+  color: var(--white);
+}
+.foot-tag.yellow {
+  background: var(--yellow);
+  color: var(--ink);
+}

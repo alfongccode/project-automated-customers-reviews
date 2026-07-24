@@ -5,6 +5,7 @@ from core.storage import create_new_product, get_products_list, get_product, get
 router = APIRouter(prefix='/products', tags=["products"])
 
 class CreateProductRequest(BaseModel):
+    brand: str
     name: str
     sku: str
     tags: str
@@ -12,7 +13,7 @@ class CreateProductRequest(BaseModel):
 
 @router.post('')
 async def api_create_new_product(payload: CreateProductRequest):
-    return await create_new_product(name=payload.name, sku=payload.sku, tags=payload.tags, description=payload.description)
+    return await create_new_product(brand=payload.brand, name=payload.name, sku=payload.sku, tags=payload.tags, description=payload.description)
 
 @router.get('')
 async def api_get_products_list():

@@ -14,6 +14,7 @@ class User(AbstractUser):
         return self.username
     
 class Product(models.Model):
+    brand = models.CharField(max_length=100)
     name = models.CharField(max_length=200)
     sku = models.CharField(max_length=100)
     tags = models.TextField()

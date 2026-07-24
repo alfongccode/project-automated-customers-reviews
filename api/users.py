@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from core.storage import create_new_user, get_users_list, get_user_reviews_list
+from core.storage import create_new_user, get_user, get_users_list, get_user_reviews_list
 
 router = APIRouter(prefix='/users', tags=["users"])
 
@@ -16,6 +16,10 @@ async def api_create_new_user(payload: CreateUserRequest):
 @router.get('')
 async def api_get_users_list():
     return await get_users_list()
+
+@router.get('/{user_id}')
+async def api_get_user(user_id):
+    return await get_user(user_id)
 
 @router.get('/{user_id}/reviews')
 async def api_get_user_reviews_list(user_id):

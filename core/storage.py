@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from storage.models import User, Product, Review
 from models.categorize.main import get_product_classification
 from models.summarize.main import summarize_reviews
+from models.sentiment.main import sentiment_analysis
 
 async def create_new_user(username, email, password):
     User = get_user_model()
@@ -18,9 +19,10 @@ async def create_new_user(username, email, password):
             "email": user.email
         }
 
-async def create_new_product(name, sku, tags, description):
+async def create_new_product(brand, name, sku, tags, description):
     category = get_product_classification({ 'name': name, 'tags': tags })
     product = Product(
+        brand=brand,
         name=name,
         sku=sku,
         tags=tags,
@@ -30,6 +32,7 @@ async def create_new_product(name, sku, tags, description):
     await product.asave()
     return {
         "id": product.id,
+        "brand": product.brand,
         "name": product.name,
         "sku": product.sku,
         "tags": product.tags,
@@ -39,15 +42,17 @@ async def create_new_product(name, sku, tags, description):
         "updated_at": product.updated_at,
     }
 
-async def create_new_review(title, content, rating):
-    users = await User.objects.all()
-    products = await Product.objects.all();
+async def create_new_review(username, product_id, title, content, rating):
+    user = await User.objects.filter(username=username).afirst()
+    product = await Product.objects.filter(id=product_id).afirst()
+    analysis_data = sentiment_analysis({ 'title': title, 'content': content })
     review = Review(
-        user=users[0],
-        product=products[0],
+        user=user,
+        product=product,
         title=title,
         content=content,
-        rating=rating
+        rating=rating,
+        sentiment=analysis_data['sentiment']
     )
     await review.asave()
     return {
@@ -61,6 +66,9 @@ async def create_new_review(title, content, rating):
 
 async def get_users_list():
     return [user async for user in User.objects.all().values()]
+
+async def get_user(user_id):
+    return await User.objects.filter(id=user_id).values('username', 'email', 'created_at').afirst()
 
 async def get_products_list():
     return [product async for product in Product.objects.all().values()]

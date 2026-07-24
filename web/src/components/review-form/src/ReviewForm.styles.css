@@ -4,27 +4,88 @@
   box-sizing: border-box;
 }
 
-.register-form {
+.review-form-container {
+  border: 4px solid var(--red);
+  background: var(--white);
+}
+.review-form-head {
+  background: var(--red);
+  color: var(--white);
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+.review-form-head h2 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+.review-form-head .tag {
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
 }
 
-.register-form .title {
-  margin: 8px 0;
+.review-form-body {
+  padding: 24px;
 }
 
-.register-form .content {
-  margin: 8px 0;
+.field {
+  margin-bottom: 20px;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--slate);
+  margin-bottom: 8px;
+}
+.field input,
+.field textarea {
+  width: 100%;
+  border: 2px solid var(--ink);
+  font-family: inherit;
+  font-size: 15px;
+  padding: 12px;
+  color: var(--ink);
+  background: var(--white);
+}
+.field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: var(--slate);
+  margin-top: 4px;
 }
 
-.register-form .rating {
-  margin: 8px 0;
+.field input[readonly] {
+  background: #f2f3f5;
+  color: var(--slate);
+  cursor: not-allowed;
+}
+.field.karma-bar {
+  padding: 0;
 }
 
-.register-form .buttons-toolbar {
-  display: flex;
-  padding: 8px;
-  gap: 10px;
+.post-btn {
+  width: 100%;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  padding: 18px 0;
+  cursor: pointer;
+  box-shadow: 6px 6px 0 var(--red);
+}
+.post-btn:disabled {
+  background: #b7bac1;
+  box-shadow: 6px 6px 0 #d9dbdf;
+  cursor: not-allowed;
 }

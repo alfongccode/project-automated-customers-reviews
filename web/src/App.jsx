@@ -1,75 +1,113 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import MainHeader from './components/main-header';
+import SearchProducts from './components/search-products';
 import ProductsList from './components/products-list';
-import ReviewsSummaryCard from './components/reviews-summary-card';
 import ReviewsList from './components/reviews-list';
-import ReviewProductCard from './components/review-product-card';
+import ProductSummaryCard from './components/product-summary-card';
+import ReviewForm from './components/review-form';
+import MainFooter from './components/main-footer';
 import {
   create_new_review,
   get_products_list,
   get_products_reviews_list,
   get_products_reviews_summary,
   get_review_sentiment,
+  get_user_by_id,
 } from './providers';
 
 function App() {
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState({});
-  const [reviews, setReviews] = useState([]);
-  const [reviewsSummary, setReviewsSummary] = useState(null);
-  const [isSummaryLoading, setIsSummaryLoading] = useState(false);
-  const [summaryError, setSummaryError] = useState(null);
 
-  function create_test_user_fastapi() {
-    return fetch('/api/user/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: 'test',
-        email: 'test@example.com',
-        password: 'test?1234',
-      }),
-    }).then((response) => response.json());
-  }
-
-  function onLoadComponent() {
-    return get_products_list().then((products) => setProducts([...products]));
-  }
-
-  async function handleShowProductReviews(product_id) {
-    const product = products.find((product) => product.id === product_id);
+  function handleSelectListProduct(product) {
     setProduct(product);
-    setIsSummaryLoading(true);
-    setSummaryError(null);
-    await get_products_reviews_summary(product_id)
-      .then((summary) => setReviewsSummary(summary))
-      .catch(() => setSummaryError('Could not summarize the reviews.'))
-      .finally(() => setIsSummaryLoading(false));
+  }
 
-    return get_products_reviews_list(product_id).then((reviews) =>
-      setReviews([...reviews])
+  function handleSearchProducts(value) {
+    const term = value.trim().toLowerCase();
+    setProducts(
+      term
+        ? allProducts.filter((product) =>
+            product?.name?.toLowerCase().startsWith(term)
+          )
+        : [...allProducts]
     );
   }
 
   function handleCreateNewReview(data) {
-    return create_new_review(data).then((response) => console.log('created'));
+    return create_new_review(data).then((response) => loadProducts());
   }
 
-  useEffect(onLoadComponent, []);
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProducts() {
+      const currProducts = await get_products_list();
+
+      const newProducts = await Promise.all(
+        currProducts.map(async (currProduct) => {
+          const rawReviews = await get_products_reviews_list(currProduct?.id);
+
+          const currReviews = await Promise.all(
+            rawReviews.map(async (review) => {
+              const user = await get_user_by_id(review?.user_id);
+              return {
+                ...review,
+                user: {
+                  username: user?.username,
+                  email: user?.email,
+                  join_date: user?.created_at,
+                },
+              };
+            })
+          );
+
+          const metadata = await get_products_reviews_summary(currProduct?.id);
+
+          return {
+            ...currProduct,
+            reviews: currReviews,
+            metadata,
+          };
+        })
+      );
+
+      if (!cancelled) setAllProducts(newProducts);
+    }
+
+    loadProducts().catch(console.error);
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>
+      <MainHeader />
+      <div class="hazard-strip"></div>
+      <SearchProducts onSearch={handleSearchProducts} />
       <ProductsList
         products={products}
-        onViewReviews={handleShowProductReviews}
+        onClickProduct={handleSelectListProduct}
       />
-      <ReviewsSummaryCard
-        summary={reviewsSummary}
-        isLoading={isSummaryLoading}
-        error={summaryError}
+      <ProductSummaryCard
+        product={Object.keys(product).length ? product : allProducts[0]}
       />
-      <ReviewsList reviews={reviews} />
-      <ReviewProductCard product={product} onSubmit={handleCreateNewReview} />
+      <ReviewsList
+        reviews={
+          Object.keys(product).length
+            ? product?.reviews
+            : allProducts[0]?.reviews
+        }
+      />
+      <ReviewForm
+        product={Object.keys(product).length ? product : allProducts[0]}
+        onSubmit={handleCreateNewReview}
+      />
+      <MainFooter />
     </>
   );
 }

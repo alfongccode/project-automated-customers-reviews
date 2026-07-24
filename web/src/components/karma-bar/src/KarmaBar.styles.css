@@ -1,0 +1,88 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+.karma-bar {
+  width: 100%;
+}
+
+.karma-bar-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.karma-bar-input:focus {
+  outline: none;
+}
+
+/* Track */
+.karma-bar-input::-webkit-slider-runnable-track {
+  height: 26px;
+  border: 2px solid var(--ink);
+  background: linear-gradient(
+    to right,
+    var(--ink) 0%,
+    var(--ink) var(--karma-bar-percent, 0%),
+    var(--red) var(--karma-bar-percent, 0%),
+    var(--red) 100%
+  );
+}
+.karma-bar-input::-moz-range-track {
+  height: 22px;
+  border: 2px solid var(--ink);
+  background: var(--red);
+}
+.karma-bar-input::-moz-range-progress {
+  height: 22px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+/* Thumb */
+.karma-bar-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 42px;
+  height: 26px;
+  margin-top: -2px;
+  background: var(--red);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.karma-bar-input::-moz-range-thumb {
+  width: 42px;
+  height: 26px;
+  border-radius: 0;
+  background: var(--red);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+.karma-bar-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 2px;
+}
+
+.karma-bar-tick {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--slate);
+}
+
+.karma-bar-tick.active {
+  color: var(--white);
+  background: var(--red);
+  border: 2px solid var(--ink);
+  padding: 2px 8px;
+}

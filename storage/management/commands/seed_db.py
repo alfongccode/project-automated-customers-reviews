@@ -52,6 +52,7 @@ class Command(BaseCommand):
             product, _ = Product.objects.get_or_create(
                 sku=row['asins'],
                 defaults={
+                    'brand': row['brand'],
                     'name': row['name'],
                     'tags': row['categories'],
                     'category': category,
