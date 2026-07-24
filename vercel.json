@@ -12,6 +12,9 @@
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "core/asgi.py" }
+    { "src": "/api/(.*)", "dest": "core/asgi.py" },
+    { "src": "/admin/(.*)", "dest": "core/asgi.py" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
