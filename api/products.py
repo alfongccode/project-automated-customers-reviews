@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from core.storage import create_new_product, get_products_list, get_product, get_products_reviews_list, summarize_product_reviews
+from core.main import create_new_product, get_products_list, get_product, get_products_reviews_list, summarize_product_reviews
 
 router = APIRouter(prefix='/products', tags=["products"])
 

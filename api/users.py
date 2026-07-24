@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from core.storage import create_new_user, get_user, get_users_list, get_user_reviews_list
+from core.main import create_new_user, get_user, get_users_list, get_user_reviews_list
 
 router = APIRouter(prefix='/users', tags=["users"])
 

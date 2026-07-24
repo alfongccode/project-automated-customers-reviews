@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from core.main import get_review_sentiment
-from core.storage import create_new_review, get_review, get_reviews_list
+from core.main import create_new_review, get_review, get_reviews_list, get_review_sentiment
 
 router = APIRouter(prefix='/reviews', tags=["reviews"])
 
