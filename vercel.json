@@ -2,7 +2,7 @@
   "buildCommand": "cd web && npm install && npm run build",
   "outputDirectory": "static",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/serverless/index" },
-    { "source": "/admin/(.*)", "destination": "/serverless/index" }
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/admin/(.*)", "destination": "/api" }
   ]
 }
