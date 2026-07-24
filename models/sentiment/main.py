@@ -3,7 +3,7 @@ LORA_MODEL = "Bitnick42/roberta-base-review-sentiment-analysis"
 LABEL2ID = {"negative": 0, "neutral": 1, "positive": 2}
 ID2LABEL = {v: k for k, v in LABEL2ID.items()}
 
-def sentiment_analysis(review):
+"""def sentiment_analysis(review):
     import torch
     from transformers import AutoTokenizer, AutoModelForSequenceClassification
     from peft import PeftModel
@@ -37,4 +37,34 @@ def sentiment_analysis(review):
         "review": review,
         "sentiment": label,
         "confidence": round(confidence, 4)
+    }"""
+    
+import os
+import httpx
+from dotenv import load_dotenv, find_dotenv
+
+_ = load_dotenv(find_dotenv(), override=True)
+
+HF_TOKEN = os.environ["HF_TOKEN"]
+HF_URL = "https://router.huggingface.co/hf-inference/models/cardiffnlp/twitter-roberta-base-sentiment-latest"
+
+async def sentiment_analysis(review):
+    review_input = " ".join([review["title"], review["content"]])
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(
+            HF_URL,
+            headers={"Authorization": f"Bearer {HF_TOKEN}"},
+            json={"inputs": review_input, "options": {"wait_for_model": True}},
+        )
+
+    resp.raise_for_status()
+
+    preds = resp.json()[0]
+    best = max(preds, key=lambda p: p["score"])
+
+    return {
+        "review": review,
+        "sentiment": best["label"],
+        "confidence": round(best["score"], 4),
     }

@@ -45,7 +45,7 @@ async def create_new_product(brand, name, sku, tags, description):
 async def create_new_review(username, product_id, title, content, rating):
     user = await User.objects.filter(username=username).afirst()
     product = await Product.objects.filter(id=product_id).afirst()
-    analysis_data = sentiment_analysis({ 'title': title, 'content': content })
+    analysis_data = await sentiment_analysis({ 'title': title, 'content': content })
     review = Review(
         user=user,
         product=product,

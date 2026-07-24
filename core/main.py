@@ -6,5 +6,5 @@ async def get_review_sentiment(review_id):
     review = await Review.objects.filter(id=review_id).values().afirst()
     if not review:
         return Response({"error": f"Review not found with review ID {review_id}"}, status=status.HTTP_404_NOT_FOUND)
-    return sentiment_analysis(review)
+    return await sentiment_analysis(review)
     #return { 'sentiment': 'neutral' }
