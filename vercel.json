@@ -8,13 +8,10 @@
     {
       "src": "core/asgi.py",
       "use": "@vercel/python",
-      "config": { "includeFiles": "static/**" }
+      "config": { "includeFiles": "../static/**" }
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "core/asgi.py" },
-    { "src": "/admin/(.*)", "dest": "core/asgi.py" },
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/core/asgi.py" }
   ]
 }
