@@ -30,6 +30,10 @@ application = Starlette(
     routes=[
         Mount("/api", app=web_api),
         Mount("/admin", app=django_app),
-        Mount("/", app=StaticFiles(directory=STATIC_DIR, html=True), name="static")
+        Mount(
+            "/",
+            app=StaticFiles(directory=STATIC_DIR, html=True, check_dir=False),
+            name="static",
+        ),
     ]
 )
