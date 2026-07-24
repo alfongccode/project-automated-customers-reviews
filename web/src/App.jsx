@@ -121,47 +121,54 @@ function App() {
 
   return (
     <>
-      <MainHeader />
-      <div className="hazard-strip"></div>
-      <SearchProducts onSearch={handleSearchProducts} />
+      <header>
+        <MainHeader />
+        <div className="hazard-strip"></div>
+      </header>
+      <main className="app-main">
+        <SearchProducts onSearch={handleSearchProducts} />
 
-      {status === 'error' && (
-        <div className="app-status app-status-error" role="alert">
-          &gt; CONNECTION_LOST. {error?.message ?? 'Unknown error.'}
-          <button
-            type="button"
-            onClick={() => {
-              setStatus('loading');
-              loadProducts({ signal: abortRef.current?.signal });
-            }}
-          >
-            RETRY
-          </button>
-        </div>
-      )}
+        {status === 'error' && (
+          <div className="app-status app-status-error" role="alert">
+            &gt; CONNECTION_LOST. {error?.message ?? 'Unknown error.'}
+            <button
+              type="button"
+              onClick={() => {
+                setStatus('loading');
+                loadProducts({ signal: abortRef.current?.signal });
+              }}
+            >
+              RETRY
+            </button>
+          </div>
+        )}
 
-      {status === 'loading' && (
-        <div className="app-status" role="status">
-          &gt; LOADING_DATA...
-        </div>
-      )}
+        {status === 'loading' && (
+          <div className="app-status" role="status">
+            &gt; LOADING_DATA...
+          </div>
+        )}
 
-      {status === 'ready' && (
-        <>
-          <ProductsList
-            products={products}
-            onClickProduct={handleSelectListProduct}
-          />
-          <ProductSummaryCard product={selectedProduct} />
-          <ReviewsList reviews={selectedProduct?.reviews} />
-          <ReviewForm
-            product={selectedProduct}
-            onSubmit={handleCreateNewReview}
-          />
-        </>
-      )}
-
-      <MainFooter />
+        {status === 'ready' && (
+          <>
+            <ProductsList
+              products={products}
+              onClickProduct={handleSelectListProduct}
+            />
+            <ProductSummaryCard product={selectedProduct} />
+            <div className="app-reviews-list">
+              <ReviewsList reviews={selectedProduct?.reviews} />
+            </div>
+            <ReviewForm
+              product={selectedProduct}
+              onSubmit={handleCreateNewReview}
+            />
+          </>
+        )}
+      </main>
+      <footer>
+        <MainFooter />
+      </footer>
     </>
   );
 }

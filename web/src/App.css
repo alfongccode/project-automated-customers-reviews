@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .hazard-strip {
   height: 14px;
   background: repeating-linear-gradient(
@@ -8,6 +12,16 @@
     var(--paper) 28px
   );
   border-bottom: 4px solid var(--ink);
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.app-main .app-reviews-list {
+  margin-bottom: 16px;
 }
 
 .app-status {

@@ -31,7 +31,12 @@ function ProductsList({ products = [], onClickProduct }) {
         }}
       >
         <span className="score-chip">{score ?? '--'}</span>
-        <div className="cat">{product?.brand}</div>
+        <div className="cat">
+          <span className="cat-brand">{product?.brand}</span>
+          {product?.category && (
+            <span className="pcategory-badge">{product.category}</span>
+          )}
+        </div>
         <div className="pname">
           {product?.name} - {product?.sku} - {product?.category}
         </div>
