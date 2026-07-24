@@ -9,3 +9,21 @@
   );
   border-bottom: 4px solid var(--ink);
 }
+
+.app-status {
+  padding: 1rem 1.25rem;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+.app-status-error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #ff4d4d;
+}
+
+.app-status-error button {
+  cursor: pointer;
+  font-family: inherit;
+}

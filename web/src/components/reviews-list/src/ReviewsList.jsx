@@ -1,6 +1,6 @@
 import React from 'react';
 import './ReviewsList.styles.css';
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 
 function formatDate(dateString) {
   if (!dateString) return null;
@@ -41,16 +41,13 @@ function getReviewSentimentBadge(sentiment) {
 
 function ReviewsList({ reviews = [] }) {
   const [currentFilter, setCurrentFilter] = useState(null);
-  const [filterReviews, setFilterReviews] = useState([]);
 
-  function applyFilterOnReviews(sentiment) {
-    return reviews.filter((review) => review?.sentiment === sentiment);
-  }
+  const filterReviews = useMemo(() => {
+    const safeReviews = reviews ?? [];
 
-  useEffect(() => {
-    setFilterReviews(
-      currentFilter ? [...applyFilterOnReviews(currentFilter)] : [...reviews]
-    );
+    if (!currentFilter) return safeReviews;
+
+    return safeReviews.filter((review) => review?.sentiment === currentFilter);
   }, [reviews, currentFilter]);
 
   return (
@@ -59,25 +56,25 @@ function ReviewsList({ reviews = [] }) {
         <span className="file-tag">// REVIEW_WALL //</span>
         <div className="filters">
           <button
-            className={`filter-btn ${!currentFilter && 'active'}`}
+            className={`filter-btn ${!currentFilter ? 'active' : ''}`}
             onClick={() => setCurrentFilter(null)}
           >
             all
           </button>
           <button
-            className={`filter-btn love ${currentFilter === SENTIMENT_STATUS.POSITIVE && 'active'}`}
+            className={`filter-btn love ${currentFilter === SENTIMENT_STATUS.POSITIVE ? 'active' : ''}`}
             onClick={() => setCurrentFilter(SENTIMENT_STATUS.POSITIVE)}
           >
             + love
           </button>
           <button
-            className={`filter-btn meh ${currentFilter === SENTIMENT_STATUS.NEUTRAL && 'active'}`}
+            className={`filter-btn meh ${currentFilter === SENTIMENT_STATUS.NEUTRAL ? 'active' : ''}`}
             onClick={() => setCurrentFilter(SENTIMENT_STATUS.NEUTRAL)}
           >
             ~ meh
           </button>
           <button
-            className={`filter-btn hate ${currentFilter === SENTIMENT_STATUS.NEGATIVE && 'active'}`}
+            className={`filter-btn hate ${currentFilter === SENTIMENT_STATUS.NEGATIVE ? 'active' : ''}`}
             onClick={() => setCurrentFilter(SENTIMENT_STATUS.NEGATIVE)}
           >
             - hate
@@ -87,8 +84,8 @@ function ReviewsList({ reviews = [] }) {
 
       {filterReviews.length === 0 && <div>There are no reviews</div>}
 
-      {filterReviews.map((review) => (
-        <div className="review-row">
+      {filterReviews.map((review, idx) => (
+        <div className="review-row" key={review?.id ?? idx}>
           <div
             className={`verdict-slab ${getReviewSentimentClassName(review?.sentiment)}`}
           >

@@ -1,31 +1,29 @@
-function get_products_list() {
-  return fetch('/api/products').then((response) => response.json());
+import { get, post } from './http.js';
+
+function get_products_list({ signal } = {}) {
+  return get('/api/products', { signal });
 }
 
-function get_products_reviews_list(product_id) {
-  return fetch(`/api/products/${product_id}/reviews`).then((response) =>
-    response.json()
-  );
+function get_products_reviews_list(product_id, { signal } = {}) {
+  return get(`/api/products/${product_id}/reviews`, { signal });
 }
 
-function get_products_reviews_summary(product_id) {
-  return fetch(`/api/products/${product_id}/reviews/summarize`).then(
-    (response) => response.json()
-  );
+function get_products_reviews_summary(product_id, { signal } = {}) {
+  return get(`/api/products/${product_id}/reviews/summarize`, { signal });
 }
 
-function create_new_product(data) {
-  return fetch('/api/products', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+function create_new_product(data, { signal } = {}) {
+  return post(
+    '/api/products',
+    {
       user: 1,
       name: data.name,
       sku: data.sku,
       tags: data.tags,
       description: data.description,
-    }),
-  });
+    },
+    { signal }
+  );
 }
 
 export {

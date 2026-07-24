@@ -11,7 +11,8 @@ const SENTIMENT_STATUS = {
 const TITLE_MAX_LENGTH = 100;
 const CONTENT_MAX_LENGTH = 500;
 
-function ReviewForm({ product = {}, onSubmit }) {
+function ReviewForm({ product, onSubmit }) {
+  const safeProduct = product ?? {};
   const [alias, setAlias] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -19,9 +20,8 @@ function ReviewForm({ product = {}, onSubmit }) {
 
   function handleSubmitForm(ev) {
     ev.preventDefault();
-    console.log(product);
-    onSubmit({
-      product_id: product?.id,
+    onSubmit?.({
+      product_id: safeProduct?.id,
       username: alias.trim(),
       title: title.trim(),
       content: content.trim(),
@@ -47,7 +47,7 @@ function ReviewForm({ product = {}, onSubmit }) {
       <div className="review-form-body">
         <div className="field">
           <label>TARGET</label>
-          <input type="text" value={`> ${product?.name ?? ''}`} readOnly />
+          <input type="text" value={`> ${safeProduct?.name ?? ''}`} readOnly />
         </div>
         <div className="field">
           <label>ALIAS</label>

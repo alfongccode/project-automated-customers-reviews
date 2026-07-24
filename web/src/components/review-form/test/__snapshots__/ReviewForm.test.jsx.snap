@@ -2,94 +2,153 @@
 
 exports[`ReviewForm should match snapshot 1`] = `
 <div>
-  <div
+  <form
     class="review-form-container"
   >
-    <form
-      class="register-form"
+    <div
+      class="review-form-head"
     >
-      <input
-        class="title"
-        id="title"
-        name="title"
-        placeholder="Write your review title here"
-        type="text"
-      />
-      <textarea
-        class="content"
-        id="content"
-        name="content"
-        placeholder="Write your review here"
-        rows="4"
-      />
-      <div
-        aria-label="Rating"
-        class="stars-rating-container"
-        role="radiogroup"
+      <h2>
+        SPIT OUT A REVIEW
+      </h2>
+      <span
+        class="tag"
       >
-        <button
-          aria-checked="false"
-          aria-label="1 star"
-          class="star-button"
-          role="radio"
-          type="button"
-        >
-          ☆
-        </button>
-        <button
-          aria-checked="false"
-          aria-label="2 stars"
-          class="star-button"
-          role="radio"
-          type="button"
-        >
-          ☆
-        </button>
-        <button
-          aria-checked="false"
-          aria-label="3 stars"
-          class="star-button"
-          role="radio"
-          type="button"
-        >
-          ☆
-        </button>
-        <button
-          aria-checked="false"
-          aria-label="4 stars"
-          class="star-button"
-          role="radio"
-          type="button"
-        >
-          ☆
-        </button>
-        <button
-          aria-checked="false"
-          aria-label="5 stars"
-          class="star-button"
-          role="radio"
-          type="button"
-        >
-          ☆
-        </button>
+        NO MODERATION
+      </span>
+    </div>
+    <div
+      class="review-form-body"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          TARGET
+        </label>
+        <input
+          readonly=""
+          type="text"
+          value="> "
+        />
       </div>
       <div
-        class="buttons-toolbar"
+        class="field"
       >
-        <button
-          class="btn-clear"
-          type="reset"
-        >
-          Clear
-        </button>
-        <button
-          class="btn-send"
-          type="submit"
-        >
-          Send
-        </button>
+        <label>
+          ALIAS
+        </label>
+        <input
+          placeholder="e.g. urban_rat"
+          type="text"
+          value=""
+        />
       </div>
-    </form>
-  </div>
+      <div
+        class="field"
+      >
+        <label>
+          TITLE (MAX 
+          100
+          )
+        </label>
+        <input
+          maxlength="100"
+          placeholder="Summarize this like a movie synopsis where humanity's fate is on the line."
+          type="text"
+          value=""
+        />
+        <div
+          class="char-count"
+        >
+          0
+          /
+          100
+        </div>
+      </div>
+      <div
+        class="field"
+      >
+        <label>
+          VERDICT (MAX 
+          500
+          )
+        </label>
+        <textarea
+          maxlength="500"
+          placeholder="tell what happened. no filters. no suits reading."
+        />
+        <div
+          class="char-count"
+        >
+          0
+          /
+          500
+        </div>
+      </div>
+      <div
+        class="karma-bar"
+      >
+        <label>
+          KARMA
+        </label>
+        <div
+          class="karma-bar"
+        >
+          <input
+            aria-label="Karma level"
+            class="karma-bar-input"
+            max="5"
+            min="0"
+            name="rating"
+            step="1"
+            style="--karma-bar-percent: 0%;"
+            type="range"
+            value="0"
+          />
+          <div
+            class="karma-bar-ticks"
+          >
+            <span
+              class="karma-bar-tick active"
+            >
+              0
+            </span>
+            <span
+              class="karma-bar-tick "
+            >
+              1
+            </span>
+            <span
+              class="karma-bar-tick "
+            >
+              2
+            </span>
+            <span
+              class="karma-bar-tick "
+            >
+              3
+            </span>
+            <span
+              class="karma-bar-tick "
+            >
+              4
+            </span>
+            <span
+              class="karma-bar-tick "
+            >
+              5
+            </span>
+          </div>
+        </div>
+      </div>
+      <button
+        class="post-btn"
+        type="submit"
+      >
+        &gt;&gt; POST WITHOUT REGRET
+      </button>
+    </div>
+  </form>
 </div>
 `;

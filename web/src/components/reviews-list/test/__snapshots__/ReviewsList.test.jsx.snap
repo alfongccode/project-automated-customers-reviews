@@ -3,13 +3,44 @@
 exports[`ReviewsList should match snapshot 1`] = `
 <div>
   <div
-    class="reviews-list-container"
+    class="review-wall"
   >
-    <p
-      class="reviews-list-status"
+    <div
+      class="wall-head"
     >
-      This product does not yet have any reviews.
-    </p>
+      <span
+        class="file-tag"
+      >
+        // REVIEW_WALL //
+      </span>
+      <div
+        class="filters"
+      >
+        <button
+          class="filter-btn active"
+        >
+          all
+        </button>
+        <button
+          class="filter-btn love "
+        >
+          + love
+        </button>
+        <button
+          class="filter-btn meh "
+        >
+          ~ meh
+        </button>
+        <button
+          class="filter-btn hate "
+        >
+          - hate
+        </button>
+      </div>
+    </div>
+    <div>
+      There are no reviews
+    </div>
   </div>
 </div>
 `;

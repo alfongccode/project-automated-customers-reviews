@@ -1,22 +1,21 @@
-function get_review_sentiment(review_id) {
-  return fetch(`/api/reviews/${review_id}/sentiment`)
-    .then((response) => response.json())
-    .then((data) => setApiResponse(JSON.stringify(data)));
+import { get, post } from './http.js';
+
+function get_review_sentiment(review_id, { signal } = {}) {
+  return get(`/api/reviews/${review_id}/sentiment`, { signal });
 }
 
-function create_new_review(data) {
-  console.log(data);
-  return fetch('/api/reviews', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+function create_new_review(data, { signal } = {}) {
+  return post(
+    '/api/reviews',
+    {
       username: data.username,
       product_id: data.product_id,
       title: data.title,
       content: data.content,
       rating: data.rating,
-    }),
-  });
+    },
+    { signal }
+  );
 }
 
 export { create_new_review, get_review_sentiment };
