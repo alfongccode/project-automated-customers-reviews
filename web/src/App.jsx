@@ -166,9 +166,7 @@ function App() {
           </>
         )}
       </main>
-      <footer>
-        <MainFooter />
-      </footer>
+      <MainFooter />
     </>
   );
 }
