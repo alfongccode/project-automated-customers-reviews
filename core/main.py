@@ -107,7 +107,7 @@ async def get_products_reviews_list(product_id):
     return [review async for review in Review.objects.filter(product=product_id).values()]
 
 async def get_product(product_id):
-    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'summary', 'added_at', 'updated_at')
+    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'metadata', 'added_at', 'updated_at')
     product = await qs.afirst()
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
