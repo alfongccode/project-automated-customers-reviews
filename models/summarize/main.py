@@ -57,7 +57,7 @@ def summarize_via_openai(payload):
 
 def summarize_reviews(product, reviews):
     sentiments_counts = get_sentiments_counts(reviews)
-    result = summarize_via_openai({ 'product':product, 'reviews': reviews })
+    result = summarize_via_openai({ 'product': product, 'reviews': reviews })
     return {
         "product_name": result.get("product_name", product.get("name", "Unknown product")),
         "summary": result.get("summary", ""),

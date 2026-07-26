@@ -66,7 +66,7 @@ class ProductMetadata(models.Model):
         Product,
         on_delete=models.CASCADE,
         related_name='metadata'
-    ),
+    )
     summary = models.TextField(default="")
     positive = models.TextField(default="")
     negative = models.TextField(default="")

@@ -5,7 +5,8 @@ import random
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from storage.models import Product, Review
+from storage.models import Product, Review, ProductMetadata
+from models.summarize.main import summarize_reviews
 from models.sentiment.main import sentiment_analysis
 from models.categorize.main import get_product_classification
 
@@ -76,6 +77,20 @@ class Command(BaseCommand):
                 content=row['reviews.text'],
                 rating=int(float(row['reviews.rating'])),
                 sentiment=analysis_data['sentiment']
+            )
+            self.stdout.write('Creating product metadata...')
+            product_dict = { 'name': product.name, 'category': product.category, 'description': product.description, 'tags': product.tags }
+            reviews = list(Review.objects.filter(product=product.id).values('title', 'content', 'rating', 'sentiment'))
+            product_metadata = summarize_reviews(product_dict, reviews)
+            ProductMetadata.objects.update_or_create(
+                product=product,
+                defaults={
+                    'summary': product_metadata['summary'],
+                    'positive': product_metadata['positive'],
+                    'negative': product_metadata['negative'],
+                    'sentiment_counts': product_metadata['sentiment_counts'],
+                    'total_reviews': product_metadata['total_reviews'],
+                }
             )
 
         self.stdout.write(self.style.SUCCESS(
