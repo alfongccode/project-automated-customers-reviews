@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi_pagination import Page, paginate
 from core.main import create_new_product, get_products_list, get_product, get_products_reviews_list, summarize_product_reviews
 
 router = APIRouter(prefix='/products', tags=["products"])
@@ -15,9 +16,10 @@ class CreateProductRequest(BaseModel):
 async def api_create_new_product(payload: CreateProductRequest):
     return await create_new_product(brand=payload.brand, name=payload.name, sku=payload.sku, tags=payload.tags, description=payload.description)
 
-@router.get('')
+@router.get('', response_model=Page[str])
 async def api_get_products_list():
-    return await get_products_list()
+    products_list = await get_products_list()
+    return paginate(products_list)
 
 @router.get('/{product_id}')
 async def api_get_product(product_id):
