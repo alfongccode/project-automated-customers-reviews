@@ -17,7 +17,6 @@ import {
 
 async function hydrateProduct(currProduct, { signal } = {}) {
   const reviews = await get_products_reviews_list(currProduct?.id, { signal });
-
   return { ...currProduct, reviews };
 }
 
@@ -33,7 +32,6 @@ function App() {
   const loadProducts = useCallback(async ({ signal } = {}) => {
     try {
       const currProducts = (await get_products_list({ signal })) ?? [];
-
       const newProducts = await Promise.all(
         currProducts.map((currProduct) =>
           hydrateProduct(currProduct, { signal })
@@ -84,6 +82,7 @@ function App() {
   }, [allProducts, selectedProductId]);
 
   const handleSelectListProduct = useCallback((product) => {
+    console.log(product)
     setSelectedProductId(product?.id ?? null);
   }, []);
 

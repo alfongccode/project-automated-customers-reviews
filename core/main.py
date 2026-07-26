@@ -88,7 +88,7 @@ async def get_user(user_id):
     return user
 
 async def get_products_list():
-    return [product async for product in Product.objects.all().values()]
+    return [product async for product in Product.objects.all().values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'metadata', 'added_at', 'updated_at')]
 
 async def get_reviews_list():
     return [review async for review in Review.objects.all().values()]
@@ -106,11 +106,19 @@ async def get_user_reviews_list(user_id):
 async def get_products_reviews_list(product_id):
     return [review async for review in Review.objects.filter(product=product_id).values()]
 
+async def get_product_metadata(product_id):
+    qs = ProductMetadata.objects.filter(product_id=product_id).values('summary', 'positive', 'negative', 'sentiment_counts', 'total_reviews')
+    product_metadata = await qs.afirst()
+    if product_metadata is None:
+        product_metadata = {}
+    return product_metadata
+
 async def get_product(product_id):
-    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'metadata', 'added_at', 'updated_at')
+    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')
     product = await qs.afirst()
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
+    product['metadata'] = await get_product_metadata(product['id'])
     return product
 
 async def get_product_reviews(product_id):
