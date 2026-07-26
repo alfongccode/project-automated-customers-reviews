@@ -9,5 +9,5 @@ router.include_router(reviews.router)
 router.include_router(users.router)
 
 web_api = FastAPI()
-add_pagination(web_api)
 web_api.include_router(router)
+add_pagination(web_api)
