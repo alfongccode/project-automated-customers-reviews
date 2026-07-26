@@ -1,6 +1,6 @@
 
 from fastapi import HTTPException
-from storage.models import User, Product, Review
+from storage.models import User, Product, Review, ProductMetadata
 from models.summarize.main import summarize_reviews
 from models.sentiment.main import sentiment_analysis
 
@@ -58,9 +58,19 @@ async def create_new_review(username, product_id, title, content, rating):
         sentiment=analysis_data['sentiment']
     )
     await review.asave()
+    try:
+        await summarize_product_reviews(product_id=product_id)
+    except Exception as e:
+        pass
+
     return {
         "id": review.id,
-        "user_id": review.user_id,
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "join_date": user.created_at
+        },
         "product_id": review.product_id,
         "title": review.title,
         "content": review.content,
@@ -97,11 +107,14 @@ async def get_products_reviews_list(product_id):
     return [review async for review in Review.objects.filter(product=product_id).values()]
 
 async def get_product(product_id):
-    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')
+    qs = Product.objects.filter(id=product_id).values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'summary', 'added_at', 'updated_at')
     product = await qs.afirst()
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
+
+async def get_product_reviews(product_id):
+    return [r async for r in Review.objects.filter(product=product_id).values('title', 'content', 'rating', 'sentiment')]
 
 async def summarize_product_reviews(product_id):
     qs = Product.objects.filter(id=product_id).values('name', 'category', 'description', 'tags')
@@ -109,7 +122,19 @@ async def summarize_product_reviews(product_id):
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     reviews = [r async for r in Review.objects.filter(product=product_id).values('title', 'content', 'rating', 'sentiment')]
-    return summarize_reviews(product, reviews)
+    result = summarize_reviews(product, reviews)
+
+    await ProductMetadata.objects.aupdate_or_create(
+        product_id=product_id,
+        defaults={
+            'summary': result.get('summary', ''),
+            'positive': result.get('positive', ''),
+            'negative': result.get('negative', ''),
+            'sentiment_counts': result.get('sentiment_counts', {}),
+            'total_reviews': len(reviews),
+        }
+    )
+    return result
 
 async def get_review_sentiment(review_id):
     qs = Review.objects.filter(id=review_id).values('id', 'title', 'content')

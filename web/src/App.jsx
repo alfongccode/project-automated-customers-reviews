@@ -16,29 +16,9 @@ import {
 } from './providers';
 
 async function hydrateProduct(currProduct, { signal } = {}) {
-  const [rawReviews, metadata] = await Promise.all([
-    get_products_reviews_list(currProduct?.id, { signal }),
-    get_products_reviews_summary(currProduct?.id, { signal }),
-  ]);
+  const reviews = await get_products_reviews_list(currProduct?.id, { signal });
 
-  const reviews = await Promise.all(
-    (rawReviews ?? []).map(async (review) => {
-      const user = await get_user_by_id(review?.user_id, { signal }).catch(
-        () => null
-      );
-
-      return {
-        ...review,
-        user: {
-          username: user?.username,
-          email: user?.email,
-          join_date: user?.created_at,
-        },
-      };
-    })
-  );
-
-  return { ...currProduct, reviews, metadata };
+  return { ...currProduct, reviews };
 }
 
 function App() {
@@ -151,13 +131,15 @@ function App() {
 
         {status === 'ready' && (
           <>
-            <ProductsList
-              products={products}
-              onClickProduct={handleSelectListProduct}
-            />
-            <ProductSummaryCard product={selectedProduct} />
-            <div className="app-reviews-list">
-              <ReviewsList reviews={selectedProduct?.reviews} />
+            <div className="">
+              <ProductsList
+                products={products}
+                onClickProduct={handleSelectListProduct}
+              />
+              <ProductSummaryCard product={selectedProduct} />
+              <div className="app-reviews-list">
+                <ReviewsList reviews={selectedProduct?.reviews} />
+              </div>
             </div>
             <ReviewForm
               product={selectedProduct}

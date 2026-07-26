@@ -12,6 +12,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
     
 class Product(models.Model):
     brand = models.CharField(max_length=100)
@@ -59,3 +60,23 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.title} - {self.user}'
+    
+class ProductMetadata(models.Model):
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='metadata'
+    ),
+    summary = models.TextField(default="")
+    positive = models.TextField(default="")
+    negative = models.TextField(default="")
+    sentiment_counts = models.JSONField(default=dict, blank=True)
+    total_reviews = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f'{self.product.name}'
