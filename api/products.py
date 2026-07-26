@@ -16,7 +16,7 @@ class CreateProductRequest(BaseModel):
 async def api_create_new_product(payload: CreateProductRequest):
     return await create_new_product(brand=payload.brand, name=payload.name, sku=payload.sku, tags=payload.tags, description=payload.description)
 
-@router.get('', response_model=Page[str])
+@router.get('', response_model=Page[dict])
 async def api_get_products_list():
     products_list = await get_products_list()
     return paginate(products_list)
