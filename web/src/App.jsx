@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
+import LoadingSpinner from './components/loading-spinner';
 import MainHeader from './components/main-header';
 import SearchProducts from './components/search-products';
 import ProductsList from './components/products-list';
@@ -16,7 +17,9 @@ import {
 } from './providers';
 
 async function hydrateProduct(currProduct, { signal } = {}) {
-  const { items: reviews } = await get_products_reviews_list(currProduct?.id, { signal });
+  const { items: reviews } = await get_products_reviews_list(currProduct?.id, {
+    signal,
+  });
   return { ...currProduct, reviews };
 }
 
@@ -93,6 +96,7 @@ function App() {
 
   const handleCreateNewReview = useCallback(
     async (data) => {
+      setStatus('loading');
       await create_new_review(data);
       await loadProducts({ signal: abortRef.current?.signal });
     },
@@ -149,6 +153,7 @@ function App() {
         )}
       </main>
       <MainFooter />
+      <LoadingSpinner active={status === 'loading'} />
     </>
   );
 }
