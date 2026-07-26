@@ -88,7 +88,9 @@ async def get_user(user_id):
     return user
 
 async def get_products_list():
-    return [product async for product in Product.objects.all().values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'metadata', 'added_at', 'updated_at')]
+    products = [p async for p in Product.objects.all().values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')]
+    metadatas = {m['product_id']: m async for m in ProductMetadata.objects.all().values('product_id', 'summary', 'positive', 'negative', 'sentiment_counts', 'total_reviews')}
+    return list(map(lambda p: {**p, 'metadata': metadatas.get(p['id'], {})}, products))
 
 async def get_reviews_list():
     return [review async for review in Review.objects.all().values()]
