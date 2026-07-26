@@ -31,7 +31,8 @@ function App() {
 
   const loadProducts = useCallback(async ({ signal } = {}) => {
     try {
-      const currProducts = (await get_products_list({ signal })) ?? [];
+      const { items: currProducts } =
+        (await get_products_list({ signal })) ?? [];
       const newProducts = await Promise.all(
         currProducts.map((currProduct) =>
           hydrateProduct(currProduct, { signal })
@@ -82,7 +83,7 @@ function App() {
   }, [allProducts, selectedProductId]);
 
   const handleSelectListProduct = useCallback((product) => {
-    console.log(product)
+    console.log(product);
     setSelectedProductId(product?.id ?? null);
   }, []);
 
