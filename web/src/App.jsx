@@ -16,7 +16,7 @@ import {
 } from './providers';
 
 async function hydrateProduct(currProduct, { signal } = {}) {
-  const reviews = await get_products_reviews_list(currProduct?.id, { signal });
+  const { items: reviews } = await get_products_reviews_list(currProduct?.id, { signal });
   return { ...currProduct, reviews };
 }
 

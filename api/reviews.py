@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi_pagination import Page, paginate
 from core.main import create_new_review, get_review, get_reviews_list, get_review_sentiment
 
 router = APIRouter(prefix='/reviews', tags=["reviews"])
@@ -15,9 +16,10 @@ class CreateReviewRequest(BaseModel):
 async def api_create_new_review(payload: CreateReviewRequest):
     return await create_new_review(username=payload.username, product_id=payload.product_id, title=payload.title, content=payload.content, rating=payload.rating)
 
-@router.get('')
-async def api_create_new_review():
-    return await get_reviews_list()
+@router.get('', response_model=Page[dict])
+async def api_get_reviews_list():
+    reviews_list = await get_reviews_list()
+    return paginate(reviews_list)
 
 @router.get('/{review_id}')
 async def api_get_review(review_id):
