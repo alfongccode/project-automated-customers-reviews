@@ -68,8 +68,8 @@ class ProductMetadata(models.Model):
         related_name='metadata'
     )
     summary = models.TextField(default="")
-    positive = models.TextField(default="")
-    negative = models.TextField(default="")
+    positive = models.JSONField(default=list, blank=True)
+    negative = models.JSONField(default=list, blank=True)
     sentiment_counts = models.JSONField(default=dict, blank=True)
     total_reviews = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

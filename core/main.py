@@ -138,8 +138,8 @@ async def summarize_product_reviews(product_id):
         product_id=product_id,
         defaults={
             'summary': result.get('summary', ''),
-            'positive': result.get('positive', ''),
-            'negative': result.get('negative', ''),
+            'positive': result.get('positive', []),
+            'negative': result.get('negative', []),
             'sentiment_counts': result.get('sentiment_counts', {}),
             'total_reviews': len(reviews),
         }

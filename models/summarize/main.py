@@ -61,8 +61,8 @@ def summarize_reviews(product, reviews):
     return {
         "product_name": result.get("product_name", product.get("name", "Unknown product")),
         "summary": result.get("summary", ""),
-        "positive": result.get("highlights", ""),
-        "negative": result.get("areas_to_improve", ""),
+        "positive": result.get("highlights", []),
+        "negative": result.get("areas_to_improve", []),
         "sentiment_counts": sentiments_counts,
         "total_reviews": len(reviews),
     }
