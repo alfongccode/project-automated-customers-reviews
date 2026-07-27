@@ -87,13 +87,27 @@ async def get_user(user_id):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-async def get_products_list():
+async def get_products_list(sort_by = ""):
+    order_by = sort_by.lower().strip().split('.')
     products = [p async for p in Product.objects.all().values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')]
     metadatas = {m['product_id']: m async for m in ProductMetadata.objects.all().values('product_id', 'summary', 'positive', 'negative', 'sentiment_counts', 'total_reviews')}
-    return list(map(lambda p: {**p, 'metadata': metadatas.get(p['id'], {})}, products))
+    products_metadatas = list(map(lambda p: {**p, 'metadata': metadatas.get(p['id'], {})}, products))
 
-async def get_reviews_list():
-    return [review async for review in Review.objects.all().values()]
+    if 'metadata' in order_by:
+        if order_by[1] in ['positive', 'negative', 'neutral']:
+            products_metadatas.sort(key=lambda product: product['metadata'].get("sentiment_counts", {}).get(order_by[1], 0), reverse=True)
+        if order_by[1] == 'total':
+            products_metadatas.sort(key=lambda product: product['metadata'].get("total_reviews", 0), reverse=True)
+
+    return products_metadatas
+
+async def get_reviews_list(sort_by = ""):
+    qs = Review.objects.all()
+
+    if sort_by:
+        return [review async for review in qs.order_by(sort_by).values()]
+
+    return [review async for review in qs.values()]
 
 async def get_review(review_id):
     qs = Review.objects.filter(id=review_id).values('id', 'user_id', 'product_id', 'title', 'content', 'rating', 'sentiment', 'created_at', 'updated_at')

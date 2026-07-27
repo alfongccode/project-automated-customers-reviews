@@ -12,10 +12,13 @@ function get_products_reviews_list(
   { page = 1, size = 10 } = {},
   { signal } = {}
 ) {
-  const url = new URL('/api/products', window.location.origin);
+  const url = new URL(
+    `/api/products/${product_id}/reviews`,
+    window.location.origin
+  );
 
   url.search = new URLSearchParams({ page, size }).toString();
-  return get(`/api/products/${product_id}/reviews`, { signal });
+  return get(url, { signal });
 }
 
 function get_products_reviews_summary(product_id, { signal } = {}) {

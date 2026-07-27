@@ -17,8 +17,8 @@ async def api_create_new_review(payload: CreateReviewRequest):
     return await create_new_review(username=payload.username, product_id=payload.product_id, title=payload.title, content=payload.content, rating=payload.rating)
 
 @router.get('', response_model=Page[dict])
-async def api_get_reviews_list():
-    reviews_list = await get_reviews_list()
+async def api_get_reviews_list(sort_by = ""):
+    reviews_list = await get_reviews_list(sort_by)
     return paginate(reviews_list)
 
 @router.get('/{review_id}')
