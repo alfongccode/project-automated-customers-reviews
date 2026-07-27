@@ -100,14 +100,11 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
-        conn_max_age=0,
-        ssl_require=True,
+        conn_max_age=0
     )
 }
 
-sslmode = os.getenv("DB_SSLMODE")
-if sslmode:
-    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = sslmode
+DATABASES["default"]["OPTIONS"] = {"sslmode": os.getenv("DATABASE_SSL_MODE", "disable")}
 
 
 # Password validation

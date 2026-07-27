@@ -1,0 +1,21 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+.infinite-scroll-wrapper-container {
+  height: 400px;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.infinite-scroll-wrapper-container::-webkit-scrollbar {
+  display: none;
+}
+
+.infinite-scroll-wrapper-container .infinite-scroll-wrapper-trigger {
+  visibility: hidden;
+  min-height: 20px;
+}
