@@ -87,9 +87,10 @@ async def get_user(user_id):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-async def get_products_list(sort_by = ""):
+async def get_products_list(prefix = "", sort_by = ""):
     order_by = sort_by.lower().strip().split('.')
-    products = [p async for p in Product.objects.all().values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')]
+    qs = Product.objects.filter(name__istartswith=prefix) if prefix else Product.objects.all()
+    products = [p async for p in qs.values('id', 'brand', 'name', 'sku', 'tags', 'category', 'description', 'added_at', 'updated_at')]
     metadatas = {m['product_id']: m async for m in ProductMetadata.objects.all().values('product_id', 'summary', 'positive', 'negative', 'sentiment_counts', 'total_reviews')}
     products_metadatas = list(map(lambda p: {**p, 'metadata': metadatas.get(p['id'], {})}, products))
 
@@ -100,6 +101,14 @@ async def get_products_list(sort_by = ""):
             products_metadatas.sort(key=lambda product: product['metadata'].get("total_reviews", 0), reverse=True)
 
     return products_metadatas
+
+async def get_product_most_hated():
+    products_metadatas = await get_products_list(sort_by='metadata.negative')
+    return products_metadatas[0]
+
+async def get_product_most_loved():
+    products_metadatas = await get_products_list(sort_by='metadata.positive')
+    return products_metadatas[0]
 
 async def get_reviews_list(sort_by = ""):
     qs = Review.objects.all()
@@ -120,7 +129,15 @@ async def get_user_reviews_list(user_id):
     return [review async for review in Review.objects.filter(user=user_id).values()]
 
 async def get_products_reviews_list(product_id):
-    return [review async for review in Review.objects.filter(product=product_id).values()]
+    reviews = [
+        review async for review in
+        Review.objects.filter(product=product_id).values(
+            'id', 'user_id', 'user__username', 'product_id', 'title', 'content', 'rating', 'sentiment', 'created_at', 'updated_at'
+        )
+    ]
+    for review in reviews:
+        review['user'] = {'id': review.pop('user_id'), 'username': review.pop('user__username')}
+    return reviews
 
 async def get_product_metadata(product_id):
     qs = ProductMetadata.objects.filter(product_id=product_id).values('summary', 'positive', 'negative', 'sentiment_counts', 'total_reviews')

@@ -24,7 +24,7 @@ function InfiniteScrollWrapper({ children, hasMore, isLoading, onLoadMore }) {
     return () => {
       if (triggerRef.current) observer.unobserve(triggerRef.current);
     };
-  }, [hasMore, isLoading]);
+  }, [hasMore, isLoading, onLoadMore]);
 
   return (
     <div className="infinite-scroll-wrapper-container">

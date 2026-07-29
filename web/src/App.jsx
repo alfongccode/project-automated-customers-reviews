@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 import LoadingSpinner from './components/loading-spinner';
+import AppLayout from './components/app-layout';
 import MainHeader from './components/main-header';
-import InfiniteScrollWrapper from './components/infinite-scroll-wrapper';
 import SearchProducts from './components/search-products';
+import InfiniteScrollWrapper from './components/infinite-scroll-wrapper';
 import ProductsList from './components/products-list';
-import ReviewsList from './components/reviews-list';
 import ProductSummaryCard from './components/product-summary-card';
+import ReviewsList from './components/reviews-list';
 import ReviewForm from './components/review-form';
 import MainFooter from './components/main-footer';
 import {
@@ -15,255 +16,208 @@ import {
   get_products_reviews_list,
 } from './providers';
 
-const EMPTY_PAGE = { items: [], page: 0, total: 0 };
-
-async function hydrateProduct(currProduct, { signal } = {}) {
-  const { items: reviews } = await get_products_reviews_list(currProduct?.id, {
-    signal,
-  });
-  return { ...currProduct, reviews };
-}
+const PAGE_SIZE = 5;
+const EMPTY_PAGE = { items: [], page: 0, size: PAGE_SIZE, prefix: '' };
+const MIN_TERM_LENGTH = 3;
 
 function App() {
-  const [allProducts, setAllProducts] = useState(EMPTY_PAGE);
-  const [allReviews, setAllReviews] = useState(EMPTY_PAGE);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  /* PRODUCTS STATUS */
+  const [products, setProducts] = useState(EMPTY_PAGE);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  /* REVIEWS STATUS */
+  const [reviews, setReviews] = useState(EMPTY_PAGE);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [hasMoreReviews, setHasMoreReviews] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+
+  const productsSearchRef = useRef({ page: 0, prefix: '' });
   const [status, setStatus] = useState('loading');
-  const [error, setError] = useState(null);
 
-  const productsAbortRef = useRef(null);
-  const reviewsAbortRef = useRef(null);
+  const loadProducts = useCallback(async (params = {}, { signal } = {}) => {
+    const prefix = params?.prefix ?? null;
+    const sort_by = params?.sort_by ?? null;
+    const size = params?.size ?? PAGE_SIZE;
+    const isSameSearch = prefix === productsSearchRef.current.prefix;
+    const page = isSameSearch ? productsSearchRef.current.page + 1 : 1;
+    const filtered_params = Object.entries(params).reduce(
+      (acc, [key, value]) => (value && { ...acc, [key]: value }) || acc,
+      {}
+    );
 
-  const loadProducts = useCallback(
-    async ({ page = 1, size } = {}, { signal } = {}) => {
-      try {
-        const {
-          items: currProducts = [],
-          page: nextPage = page,
-          total = 0,
-        } = (await get_products_list({ page, size }, { signal })) ?? {};
+    setIsLoadingProducts(true);
+    const {
+      items: currProducts = [], // Items on page
+      page: nextPage = page, // Page number
+      size: pageSize, // Total elements per page
+      total: totalProducts = 0, // Total record on database
+    } = (await get_products_list(filtered_params, { signal })) ?? {};
 
-        const newProducts = await Promise.all(
-          currProducts.map((currProduct) =>
-            hydrateProduct(currProduct, { signal })
-          )
-        );
+    if (signal?.aborted) return;
 
-        if (signal?.aborted) return;
+    productsSearchRef.current = { page: nextPage, prefix };
 
-        setAllProducts((prev) => {
-          // Si es la primera página, reemplaza; si no, concatena.
-          const items =
-            page <= 1 ? newProducts : [...prev.items, ...newProducts];
-          setHasMoreProducts(items.length < total);
-          return { items, page: nextPage, total };
-        });
-        setError(null);
-        setStatus('ready');
-      } catch (err) {
-        if (err?.name === 'AbortError' || signal?.aborted) return;
-        console.error(err);
-        setError(err);
-        setStatus('error');
-      }
+    setProducts((prev) => ({
+      items: isSameSearch ? [...prev?.items, ...currProducts] : currProducts,
+      page: nextPage,
+      size: pageSize,
+      prefix,
+    }));
+    setHasMoreProducts(nextPage * pageSize < totalProducts);
+    setIsLoadingProducts(false);
+
+    if (page === 1 && currProducts.length > 0) {
+      setSelectedProduct(currProducts[0]);
+    }
+  }, []);
+
+  const handleSearchProducts = useCallback(
+    async (term = '') => {
+      const controller = new AbortController();
+      if (term.length > 0 && term.length < MIN_TERM_LENGTH) return;
+      await loadProducts(
+        { prefix: term, sort_by: 'metadata.negative' },
+        { signal: controller?.signal }
+      );
     },
-    []
+    [loadProducts]
   );
+
+  const handleLoadMoreProductsData = useCallback(async () => {
+    const controller = new AbortController();
+    if (!hasMoreProducts) return;
+    await loadProducts(
+      { prefix: products?.prefix, sort_by: 'metadata.negative' },
+      { signal: controller?.signal }
+    );
+    return () => controller.abort();
+  }, [loadProducts, hasMoreProducts, products?.prefix]);
+
+  const handleSelectedProduct = useCallback((product) => {
+    setSelectedProduct(product ?? null);
+  }, []);
 
   const loadReviews = useCallback(
     async (productId, { page = 1, size } = {}, { signal } = {}) => {
       if (productId == null) return;
-      try {
-        const {
-          items: currReviews = [],
-          page: nextPage = page,
-          total = 0,
-        } = (await get_products_reviews_list(
-          productId,
-          { page, size },
-          { signal }
-        )) ?? {};
 
-        if (signal?.aborted) return;
+      setIsLoadingReviews(true);
 
-        setAllReviews((prev) => {
-          const items =
-            page <= 1 ? currReviews : [...prev.items, ...currReviews];
-          setHasMoreReviews(items.length < total);
-          return { items, page: nextPage, total };
-        });
-        setError(null);
-        setStatus('ready');
-      } catch (err) {
-        if (err?.name === 'AbortError' || signal?.aborted) return;
-        console.error(err);
-        setError(err);
-        setStatus('error');
-      }
+      const {
+        items: currReviews = [],
+        page: nextPage = page,
+        size: pageSize,
+        total: totalReviews = 0,
+      } = (await get_products_reviews_list(
+        productId,
+        { page, size: PAGE_SIZE },
+        { signal }
+      )) ?? {};
+
+      if (signal?.aborted) return;
+
+      setReviews((prev) => {
+        const items = page <= 1 ? currReviews : [...prev.items, ...currReviews];
+        return { items, page: nextPage, size: PAGE_SIZE };
+      });
+      setHasMoreReviews(nextPage * pageSize < totalReviews);
+      setIsLoadingReviews(false);
     },
     []
   );
 
-  // Carga inicial de productos
-  useEffect(() => {
+  const handleLoadMoreReviewsData = useCallback(async () => {
     const controller = new AbortController();
-    productsAbortRef.current = controller;
-    loadProducts({ page: 1 }, { signal: controller.signal });
-    return () => controller.abort();
-  }, [loadProducts]);
-
-  const selectedProduct = useMemo(() => {
-    const items = allProducts?.items ?? [];
-    if (selectedProductId === null) return items[0] ?? null;
-    return (
-      items.find((product) => product?.id === selectedProductId) ??
-      items[0] ??
-      null
-    );
-  }, [allProducts, selectedProductId]);
-
-  useEffect(() => {
+    if (!hasMoreReviews) return;
     const productId = selectedProduct?.id ?? null;
+
     if (productId == null) return;
 
-    const controller = new AbortController();
-    reviewsAbortRef.current = controller;
-
-    setAllReviews(EMPTY_PAGE);
-    setHasMoreReviews(true);
-    loadReviews(productId, { page: 1 }, { signal: controller.signal });
-
-    return () => controller.abort();
-  }, [selectedProduct?.id, loadReviews]);
-
-  const products = useMemo(() => {
-    const items = allProducts?.items ?? [];
-    const term = searchTerm.trim().toLowerCase();
-    if (!term) return items;
-    return items.filter((product) =>
-      product?.name?.toLowerCase().startsWith(term)
+    await loadReviews(
+      productId,
+      { page: (reviews?.page ?? 0) + 1 },
+      { signal: controller?.signal }
     );
-  }, [allProducts, searchTerm]);
-
-  const handleSelectListProduct = useCallback((product) => {
-    setSelectedProductId(product?.id ?? null);
-  }, []);
-
-  const handleSearchProducts = useCallback((value) => {
-    setSearchTerm(value);
-  }, []);
+  }, [loadReviews, reviews?.page, hasMoreReviews, selectedProduct]);
 
   const handleCreateNewReview = useCallback(
     async (data) => {
       setStatus('loading');
-      await create_new_review(data);
-      const productId = selectedProduct?.id ?? null;
-      if (productId != null) {
-        setAllReviews(EMPTY_PAGE);
-        setHasMoreReviews(true);
-        await loadReviews(
-          productId,
-          { page: 1 },
-          { signal: reviewsAbortRef.current?.signal }
-        );
+      try {
+        await create_new_review(data);
+        const productId = selectedProduct?.id ?? null;
+        if (productId != null) {
+          setReviews(EMPTY_PAGE);
+          setHasMoreReviews(true);
+          await loadReviews(productId, { page: 1 });
+        }
+      } finally {
+        setStatus('ready');
       }
     },
     [loadReviews, selectedProduct?.id]
   );
 
-  const handleLoadMoreProductsData = useCallback(async () => {
-    if (!hasMoreProducts) return;
-    setStatus('loading');
-    await loadProducts(
-      { page: (allProducts?.page ?? 0) + 1 },
-      { signal: productsAbortRef.current?.signal }
-    );
-  }, [loadProducts, allProducts?.page, hasMoreProducts]);
-
-  const handleLoadMoreReviewsData = useCallback(async () => {
-    if (!hasMoreReviews) return;
+  useEffect(() => {
     const productId = selectedProduct?.id ?? null;
     if (productId == null) return;
-    setStatus('loading');
-    await loadReviews(
-      productId,
-      { page: (allReviews?.page ?? 0) + 1 },
-      { signal: reviewsAbortRef.current?.signal }
+
+    const controller = new AbortController();
+
+    setReviews(EMPTY_PAGE);
+    setHasMoreReviews(true);
+    loadReviews(productId, { page: 1 }, { signal: controller.signal }).finally(
+      () => setStatus('ready')
     );
-  }, [loadReviews, allReviews?.page, hasMoreReviews, selectedProduct?.id]);
+
+    return () => controller.abort();
+  }, [selectedProduct?.id, loadReviews]);
 
   return (
     <>
-      <header>
-        <MainHeader />
-        <div className="hazard-strip"></div>
-      </header>
-      <main className="app-main">
-        <SearchProducts onSearch={handleSearchProducts} />
-
-        {status === 'error' && (
-          <div className="app-status app-status-error" role="alert">
-            &gt; CONNECTION_LOST. {error?.message ?? 'Unknown error.'}
-            <button
-              type="button"
-              onClick={() => {
-                setStatus('loading');
-                loadProducts(
-                  { page: 1 },
-                  { signal: productsAbortRef.current?.signal }
-                );
-              }}
-            >
-              RETRY
-            </button>
-          </div>
-        )}
-
-        {status === 'loading' && (
-          <div className="app-status" role="status">
-            &gt; LOADING_DATA...
-          </div>
-        )}
-
-        {status === 'ready' && (
+      <LoadingSpinner active={status === 'loading'} />
+      <AppLayout
+        header={<MainHeader />}
+        left={
           <>
-            <div className="app-content">
+            <SearchProducts onSearch={handleSearchProducts} />
+
+            <div className="app-layout__scroll-area app-layout__scroll-area--no-scrollbar">
               <InfiniteScrollWrapper
                 hasMore={hasMoreProducts}
-                isLoading={status === 'loading'}
+                isLoading={isLoadingProducts}
                 onLoadMore={handleLoadMoreProductsData}
               >
                 <ProductsList
-                  products={products}
-                  onClickProduct={handleSelectListProduct}
+                  products={products?.items}
+                  onClickProduct={handleSelectedProduct}
                 />
               </InfiniteScrollWrapper>
-
-              <ProductSummaryCard product={selectedProduct} />
-
-              <div className="app-reviews-list">
-                <InfiniteScrollWrapper
-                  hasMore={hasMoreReviews}
-                  isLoading={status === 'loading'}
-                  onLoadMore={handleLoadMoreReviewsData}
-                >
-                  <ReviewsList reviews={allReviews.items} />
-                </InfiniteScrollWrapper>
-              </div>
             </div>
-
-            <ReviewForm
-              product={selectedProduct}
-              onSubmit={handleCreateNewReview}
-            />
           </>
-        )}
-      </main>
-      <MainFooter />
-      <LoadingSpinner active={status === 'loading'} />
+        }
+        content={
+          <>
+            <ProductSummaryCard product={selectedProduct} />
+
+            <div className="app-layout__scroll-area app-layout__scroll-area--no-scrollbar">
+              <InfiniteScrollWrapper
+                hasMore={hasMoreReviews}
+                isLoading={isLoadingReviews}
+                onLoadMore={handleLoadMoreReviewsData}
+              >
+                <ReviewsList reviews={reviews?.items} />
+              </InfiniteScrollWrapper>
+              <ReviewForm
+                product={selectedProduct}
+                onSubmit={handleCreateNewReview}
+              />
+            </div>
+          </>
+        }
+        footer={<MainFooter />}
+      ></AppLayout>
     </>
   );
 }

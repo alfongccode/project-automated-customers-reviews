@@ -3,7 +3,7 @@ import './MainFooter.styles.css';
 
 function MainFooter() {
   return (
-    <footer>
+    <>
       <h3>WE ARE NOT TRUSTPILOT.</h3>
       <p>
         No gold stars here, no smiling CEOs. Just karma spray-painted by
@@ -16,7 +16,7 @@ function MainFooter() {
         <span className="foot-tag red">NO MERCY</span>
         <span className="foot-tag yellow">NO LAWYERS (YET)</span>
       </div>
-    </footer>
+    </>
   );
 }
 

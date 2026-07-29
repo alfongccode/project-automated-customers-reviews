@@ -5,7 +5,6 @@
 }
 
 .infinite-scroll-wrapper-container {
-  height: 400px;
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;

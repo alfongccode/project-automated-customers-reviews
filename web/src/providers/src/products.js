@@ -1,9 +1,9 @@
 import { get, post } from './http.js';
 
-function get_products_list({ page = 1, size = 10 } = {}, { signal } = {}) {
+function get_products_list(params = {}, { signal } = {}) {
   const url = new URL('/api/products', window.location.origin);
 
-  url.search = new URLSearchParams({ page, size }).toString();
+  url.search = new URLSearchParams(params).toString();
   return get(url, { signal });
 }
 

@@ -1,0 +1,85 @@
+@import '../../../index.css';
+
+* {
+  box-sizing: border-box;
+}
+
+.hazard-strip {
+  height: 14px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--ink),
+    var(--ink) 14px,
+    var(--paper) 14px,
+    var(--paper) 28px
+  );
+  border-bottom: 4px solid var(--ink);
+}
+
+.app-layout-container {
+  display: grid;
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+  grid-template-rows: auto minmax(0, 1800px) auto;
+  gap: 12px;
+  min-height: 100dvh;
+  box-sizing: border-box;
+}
+
+.app-layout__header {
+  grid-area: header;
+}
+.app-layout__main {
+  grid-area: main;
+}
+.app-layout__footer {
+  grid-area: footer;
+}
+
+.app-layout__main {
+  display: grid;
+  grid-template-columns: minmax(280px, 30%) 1fr;
+  gap: 12px;
+  min-height: 0;
+  padding: 6px 12px;
+}
+
+.app-layout__header,
+.app-layout__footer {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.app-layout__left,
+.app-layout__content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-layout__scroll-area {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.app-layout__scroll-area--no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge legacy */
+}
+.app-layout__scroll-area--no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge Chromium */
+}
+
+@media (max-width: 768px) {
+  .app-layout-container {
+    grid-template-rows: auto auto auto;
+  }
+  .app-layout__main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+}
