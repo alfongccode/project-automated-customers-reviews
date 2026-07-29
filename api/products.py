@@ -21,13 +21,13 @@ async def api_get_products_list(prefix = "", sort_by = ""):
     products_list = await get_products_list(prefix=prefix, sort_by= sort_by)
     return paginate(products_list)
 
-@router.get('/most_hated')
+"""@router.get('/most_hated')
 async def api_get_product_most_hated():
     return await get_product_most_hated()
 
 @router.get('/most_loved')
 async def api_get_product_most_loved():
-    return await get_product_most_loved()
+    return await get_product_most_loved()"""
 
 @router.get('/{product_id}')
 async def api_get_product(product_id):
