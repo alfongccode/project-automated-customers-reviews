@@ -1,7 +1,7 @@
 import React from 'react';
 import './MainHeader.styles.css';
 
-function MainHeader() {
+function MainHeader({onClickFeed, onClickKarma, onClickManifesto }) {
   return (
     <header className="topbar">
       <div className="brand">
@@ -14,9 +14,9 @@ function MainHeader() {
         </div>
       </div>
       <nav className="mainnav">
-        <a href="#">FEED</a>
-        <a href="#">KARMA</a>
-        <a href="#">MANIFESTO</a>
+        <a href="#" onClick={onClickFeed}>FEED</a>
+        <a href="#" onClick={onClickKarma}>KARMA</a>
+        <a href="#" onClick={onClickManifesto}>MANIFESTO</a>
         <button className="btn-login">LOGIN? NAH.</button>
       </nav>
     </header>

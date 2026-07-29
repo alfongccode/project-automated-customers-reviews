@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ReviewsList.styles.css';
 import { useMemo, useState } from 'react';
 
@@ -39,7 +39,7 @@ function getReviewSentimentBadge(sentiment) {
   }[sentiment];
 }
 
-function ReviewsList({ reviews = [] }) {
+function ReviewsList({ reviews = [], onLoadFilterReviews }) {
   const [currentFilter, setCurrentFilter] = useState(null);
 
   const filterReviews = useMemo(() => {
@@ -48,6 +48,10 @@ function ReviewsList({ reviews = [] }) {
     if (!currentFilter) return safeReviews;
 
     return safeReviews.filter((review) => review?.sentiment === currentFilter);
+  }, [reviews, currentFilter]);
+
+  useEffect(() => {
+    onLoadFilterReviews(currentFilter);
   }, [reviews, currentFilter]);
 
   return (
@@ -82,7 +86,11 @@ function ReviewsList({ reviews = [] }) {
         </div>
       </div>
 
-      {filterReviews.length === 0 && <div>There are no reviews</div>}
+      {filterReviews.length === 0 && (
+        <div className="review-empty">
+          &gt; NO DIRT ON THIS ONE YET. BE THE FIRST TO TALK TRASH.
+        </div>
+      )}
 
       {filterReviews.map((review, idx) => (
         <div className="review-row" key={review?.id ?? idx}>

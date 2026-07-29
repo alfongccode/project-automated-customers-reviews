@@ -1,7 +1,7 @@
 import React from 'react';
 import './ProductSummaryCard.styles.css';
 
-function ProductSummaryCard({ product }) {
+function ProductSummaryCard({ product, ref }) {
   const safeProduct = product ?? {};
   const positive = safeProduct?.metadata?.sentiment_counts?.positive ?? 0;
   const neutral = safeProduct?.metadata?.sentiment_counts?.neutral ?? 0;
@@ -18,7 +18,7 @@ function ProductSummaryCard({ product }) {
   const hatePct = total > 0 ? (negative / total) * 100 : 0;
 
   return (
-    <div className="karma-file">
+    <div className="karma-file" ref={ref}>
       <div className="file-tag">
         <span className="file-tag-label">// KARMA_FILE //</span>
         <span className="file-id">ID::{fileId}</span>

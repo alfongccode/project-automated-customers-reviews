@@ -13,7 +13,6 @@ const CONTENT_MAX_LENGTH = 500;
 
 function ReviewForm({ product, onSubmit }) {
   const safeProduct = product ?? {};
-  const [alias, setAlias] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(0);
@@ -22,13 +21,12 @@ function ReviewForm({ product, onSubmit }) {
     ev.preventDefault();
     onSubmit?.({
       product_id: safeProduct?.id,
-      username: alias.trim(),
+      username: 'anon',
       title: title.trim(),
       content: content.trim(),
       rating: rating,
     });
 
-    setAlias('');
     setTitle('');
     setContent('');
     setRating(0);
@@ -51,12 +49,7 @@ function ReviewForm({ product, onSubmit }) {
         </div>
         <div className="field">
           <label>ALIAS</label>
-          <input
-            type="text"
-            placeholder="e.g. urban_rat"
-            value={alias}
-            onChange={(ev) => setAlias(ev.target.value)}
-          />
+          <input type="text" value="@anon" readOnly />
         </div>
         <div className="field">
           <label>TITLE (MAX {TITLE_MAX_LENGTH})</label>

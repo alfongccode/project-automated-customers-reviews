@@ -68,8 +68,9 @@
   color: var(--slate);
   cursor: not-allowed;
 }
-.field.karma-bar {
+.karma-bar {
   padding: 0;
+  margin-bottom: 20px;
 }
 
 .post-btn {

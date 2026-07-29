@@ -1,24 +1,18 @@
 import { get, post } from './http.js';
 
-function get_products_list(params = {}, { signal } = {}) {
+function get_products_list({ signal, params = {} } = {}) {
   const url = new URL('/api/products', window.location.origin);
 
-  url.search = new URLSearchParams(params).toString();
-  return get(url, { signal });
+  return get(url, { signal, params });
 }
 
-function get_products_reviews_list(
-  product_id,
-  { page = 1, size = 10 } = {},
-  { signal } = {}
-) {
+function get_products_reviews_list(product_id, { signal, params = {} } = {}) {
   const url = new URL(
     `/api/products/${product_id}/reviews`,
     window.location.origin
   );
 
-  url.search = new URLSearchParams({ page, size }).toString();
-  return get(url, { signal });
+  return get(url, { signal, params });
 }
 
 function get_products_reviews_summary(product_id, { signal } = {}) {

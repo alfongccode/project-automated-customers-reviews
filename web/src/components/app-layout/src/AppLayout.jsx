@@ -8,10 +8,7 @@ function AppLayout({ header, left, content, footer }) {
         {header}
         <div className="hazard-strip"></div>
       </header>
-      <main className="app-layout__main">
-        <aside className="app-layout__left">{left}</aside>
-        <section className="app-layout__content">{content}</section>
-      </main>
+      <main className="app-layout__main">{content}</main>
       <footer className="app-layout__footer">{footer}</footer>
     </div>
   );

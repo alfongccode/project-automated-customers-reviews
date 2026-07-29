@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './InfiniteScrollWrapper.styles.css';
 
-function InfiniteScrollWrapper({ children, hasMore, isLoading, onLoadMore }) {
+function InfiniteScrollWrapper({ children, hasMore, isLoading, onLoadMore, ref }) {
   const triggerRef = useRef();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function InfiniteScrollWrapper({ children, hasMore, isLoading, onLoadMore }) {
   }, [hasMore, isLoading, onLoadMore]);
 
   return (
-    <div className="infinite-scroll-wrapper-container">
+    <div className="infinite-scroll-wrapper-container" ref={ref}>
       {children}
       <div ref={triggerRef} className="infinite-scroll-wrapper-trigger"></div>
     </div>

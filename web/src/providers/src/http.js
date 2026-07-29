@@ -37,7 +37,13 @@ async function request(url, options = {}) {
   return body;
 }
 
-function get(url, { signal } = {}) {
+function get(url, { signal, params = {} } = {}) {
+  const filtered_params = Object.entries(params).reduce(
+    (acc, [key, value]) => (value && { ...acc, [key]: value }) || acc,
+    {}
+  );
+
+  url.search = new URLSearchParams(filtered_params).toString();
   return request(url, { method: 'GET', signal });
 }
 
