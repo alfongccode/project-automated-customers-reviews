@@ -1,22 +1,20 @@
 {
-  "buildCommand": "cd web && npm install && npm run build",
-  "outputDirectory": "static",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api",
-      "destination": "/api/index"
+      "src": "web/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "../static" }
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/admin",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/admin/(.*)",
-      "destination": "/api/index"
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
+    { "src": "/admin/(.*)", "dest": "/api/index.py" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
